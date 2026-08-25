@@ -749,7 +749,11 @@ h3 {
 }
 .slide-visual {
   flex: 1;
+  /* Both minimums are needed: a flex item defaults to min-height/min-width
+     `auto`, so without these a tall diagram pushes the slide past 16:9 and a
+     wide table pushes the page past the viewport. */
   min-height: 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1390,6 +1394,34 @@ kbd {
   }
   .deck-full .slide.is-active {
     width: 100%;
+  }
+
+  /* A slide table's natural width is its longest cell, and on a phone that is
+     wider than the screen — the page itself scrolled sideways. Fixed layout
+     splits the columns evenly and lets a long address break. */
+  .slide-visual--table table {
+    table-layout: fixed;
+  }
+  .slide-visual--table th,
+  .slide-visual--table td {
+    overflow-wrap: anywhere;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  .slide-visual--table table.is-reveal td:first-child {
+    font-family: var(--sans);
+  }
+
+  /* Same story for prose tables in the supporting material: the glossary's
+     term column is long enough to push the whole page sideways. */
+  .prose table {
+    table-layout: fixed;
+    font-size: 14px;
+  }
+  .prose th,
+  .prose td {
+    overflow-wrap: anywhere;
+    padding: 9px 10px;
   }
   .deck__bar {
     gap: 14px;

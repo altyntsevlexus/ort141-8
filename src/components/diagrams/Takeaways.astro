@@ -1,0 +1,59 @@
+---
+/**
+ * Slide 21 — the three things to leave with, as pictures.
+ *
+ * The anchors under the slide say them in words; these are the images the
+ * teacher points at while saying them, so they carry no captions of their own.
+ */
+import { VB } from './_shared';
+const CX = [180, 500, 820];
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Один пароль відчиняє всі замки; домен читається справа наліво; голос не є доказом">
+  <!-- One key, three locks. -->
+  <g transform={`translate(${CX[0]} 200)`} stroke="var(--accent)" stroke-width="3" fill="none">
+    <circle cx="-112" cy="0" r="20" />
+    <path d="M-92 0 H-52" />
+    <path d="M-68 0 v14 M-56 0 v14" />
+    {/* One line per lock, fanning out — stacked locks read as a single column
+        and the key appeared to open only the middle one. */}
+    {[-78, 0, 78].map((dy) => (
+      <g>
+        <path d={`M-50 0 L14 ${dy}`} opacity="0.45" />
+        <g transform={`translate(18 ${dy})`}>
+          <rect x="0" y="-16" width="46" height="34" rx="5" />
+          <path d="M11 -16 v-9 a12 12 0 0 1 24 0 v9" />
+        </g>
+      </g>
+    ))}
+  </g>
+
+  <!-- An address bar, read right to left. -->
+  <g transform={`translate(${CX[1]} 200)`}>
+    <rect x="-124" y="-40" width="248" height="60" rx="30"
+          fill="none" stroke="var(--accent)" stroke-width="3" />
+    {[[-92, 34], [-46, 54], [22, 76]].map(([x, w], i) => (
+      <rect x={x} y="-18" width={w} height="16" rx="4"
+            fill="var(--accent)" opacity={0.25 + i * 0.3} />
+    ))}
+    <path d="M104 44 H-104" stroke="var(--accent)" stroke-width="3" marker-end="url(#tw-tip)" />
+  </g>
+
+  <!-- A voice, and no way to tell whose. -->
+  <g transform={`translate(${CX[2]} 200)`}>
+    {[-90, -60, -30, 0, 30].map((x, i) => {
+      const h = [26, 54, 80, 48, 22][i];
+      return (
+        <rect x={x} y={-h / 2} width="14" height={h} rx="7"
+              fill="var(--accent)" opacity="0.55" />
+      );
+    })}
+    <text x="76" y="24" text-anchor="middle" font-size="86" font-weight="700"
+          fill="var(--accent)">?</text>
+  </g>
+
+  <marker id="tw-tip" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13"
+          refX="11" refY="6.5" orient="auto">
+    <path d="M0 0 L12 6.5 L0 13 Z" fill="var(--accent)" />
+  </marker>
+</svg>

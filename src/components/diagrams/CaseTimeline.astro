@@ -114,4 +114,32 @@ const CASES = [
     font-weight: 600;
     text-align: center;
   }
+
+  /* Stacked, the timeline axis and its dots stop meaning anything, so on a
+     narrow slide each case becomes its own row and the axis is dropped. */
+  @container (max-width: 620px) {
+    .ct {
+      grid-template-columns: 1fr;
+      grid-template-rows: none;
+      row-gap: max(14px, 2cqw);
+    }
+    .ct__line,
+    .ct__dot {
+      display: none;
+    }
+    .ct__year,
+    .ct__dot,
+    .ct__name,
+    .ct__how,
+    .ct__hit {
+      grid-column: 1 !important;
+      grid-row: auto !important;
+    }
+    .ct__year {
+      padding-bottom: 0;
+    }
+    .ct__name {
+      padding-top: 0;
+    }
+  }
 </style>

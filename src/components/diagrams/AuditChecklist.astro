@@ -120,4 +120,15 @@ const BANDS = [
     background: rgba(194, 85, 31, 0.11);
     color: #a2451a;
   }
+
+  .au__score {
+    white-space: nowrap;
+  }
+
+  @container (max-width: 620px) {
+    .au__list,
+    .au__scale {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

@@ -1,0 +1,56 @@
+---
+/**
+ * Slide 17 — a few seconds of a story is enough raw material.
+ *
+ * Left to right: what they already have, what it goes through, what comes out
+ * of the phone. The chain is the argument — the class assumes a fake voice
+ * needs a recording studio.
+ */
+import { TYPE, VB, WARN } from './_shared';
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Кілька секунд сторіс перетворюються на згенерований голос і дзвінок з проханням про гроші">
+  <!-- A phone playing a story. -->
+  <rect x="70" y="76" width="122" height="212" rx="16"
+        fill="none" stroke="currentColor" stroke-width="2.5" />
+  <path d="M112 96 h38" stroke="currentColor" stroke-width="3" opacity="0.4" />
+  <circle cx="131" cy="182" r="30" fill="currentColor" opacity="0.1" />
+  <path d="M122 168 L146 182 L122 196 Z" fill="currentColor" opacity="0.6" />
+  <text x="131" y="326" text-anchor="middle" font-size={TYPE.sub}
+        fill="currentColor" opacity="0.78">6 секунд сторіс</text>
+
+  <path d="M212 182 H296" stroke="currentColor" stroke-width="2.5" opacity="0.5"
+        marker-end="url(#df-tip)" />
+
+  <!-- The generator. -->
+  <rect x="320" y="132" width="170" height="100" rx="12"
+        fill="var(--accent)" opacity="0.1" />
+  <rect x="320" y="132" width="170" height="100" rx="12"
+        fill="none" stroke="var(--accent)" stroke-width="2.5" />
+  <text x="405" y="196" text-anchor="middle" font-size="44" font-weight="700"
+        fill="var(--accent)">ШІ</text>
+  <text x="405" y="326" text-anchor="middle" font-size={TYPE.sub}
+        fill="currentColor" opacity="0.78">клонує голос</text>
+
+  <path d="M506 182 H590" stroke="currentColor" stroke-width="2.5" opacity="0.5"
+        marker-end="url(#df-tip)" />
+
+  <!-- The call. -->
+  <path d="M614 108 h316 a12 12 0 0 1 12 12 v96 a12 12 0 0 1 -12 12 h-262 l-32 30 v-30 h-22 a12 12 0 0 1 -12 -12 v-96 a12 12 0 0 1 12 -12 z"
+        fill={WARN} opacity="0.09" />
+  <path d="M614 108 h316 a12 12 0 0 1 12 12 v96 a12 12 0 0 1 -12 12 h-262 l-32 30 v-30 h-22 a12 12 0 0 1 -12 -12 v-96 a12 12 0 0 1 12 -12 z"
+        fill="none" stroke={WARN} stroke-width="2.5" />
+  <text x="772" y="178" text-anchor="middle" font-size="30" font-weight="600" fill={WARN}>
+    «Мамо, скинь
+  </text>
+  <text x="772" y="212" text-anchor="middle" font-size="30" font-weight="600" fill={WARN}>
+    гроші, я в біді»
+  </text>
+  <text x="772" y="326" text-anchor="middle" font-size={TYPE.sub}
+        fill="currentColor" opacity="0.78">твоїм голосом</text>
+
+  <marker id="df-tip" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12"
+          refX="10" refY="6" orient="auto">
+    <path d="M0 0 L11 6 L0 12 Z" fill="currentColor" opacity="0.5" />
+  </marker>
+</svg>
