@@ -1,0 +1,68 @@
+---
+/**
+ * Slide 16 — a cookie is a pass that has already cleared the checkpoint.
+ *
+ * Two routes to the same account box: the honest one goes through both checks,
+ * the stolen pass goes straight past them. Drawing both against one account is
+ * what makes «без пароля і без 2FA» concrete.
+ */
+import { TYPE, VB, WARN } from './_shared';
+
+const BOX = { w: 156, h: 62 };
+const ACC = { x: 800, y: 58, w: 180, h: 292 };
+const A_Y = 110;
+const B_Y = 292;
+const STEPS = [
+  { label: 'пароль', x: 58 },
+  { label: 'код 2FA', x: 244 },
+  { label: 'cookie', x: 430 },
+];
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Звичайний вхід проходить пароль і 2FA; украдена cookie обходить обидва">
+  <!-- The account both routes are trying to reach. -->
+  <rect x={ACC.x} y={ACC.y} width={ACC.w} height={ACC.h} rx="12"
+        fill="var(--accent)" opacity="0.09" />
+  <rect x={ACC.x} y={ACC.y} width={ACC.w} height={ACC.h} rx="12"
+        fill="none" stroke="var(--accent)" stroke-width="2.5" />
+  <text x={ACC.x + ACC.w / 2} y={ACC.y + ACC.h / 2 + 8} text-anchor="middle"
+        font-size={TYPE.label} font-weight="600" fill="var(--accent)">акаунт</text>
+
+  <!-- The honest route. -->
+  <text x="58" y="62" font-size={TYPE.note} font-family="var(--mono)"
+        fill="currentColor" opacity="0.5">ЗВИЧАЙНИЙ ВХІД</text>
+  {STEPS.map(({ label, x }, i) => (
+    <g>
+      <rect x={x} y={A_Y - BOX.h / 2} width={BOX.w} height={BOX.h} rx="8"
+            fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.65" />
+      <text x={x + BOX.w / 2} y={A_Y + 8} text-anchor="middle" font-size={TYPE.sub}
+            fill="currentColor">{label}</text>
+      <path d={`M${x + BOX.w + 6} ${A_Y} H${i < 2 ? x + BOX.w + 24 : ACC.x - 8}`}
+            stroke="currentColor" stroke-width="2.5" opacity="0.5"
+            marker-end="url(#cp-tip)" />
+    </g>
+  ))}
+
+  <!-- The stolen pass, which meets neither check. -->
+  <text x="58" y="244" font-size={TYPE.note} font-family="var(--mono)"
+        fill={WARN} opacity="0.85">З УКРАДЕНОЮ ПЕРЕПУСТКОЮ</text>
+  <rect x="58" y={B_Y - BOX.h / 2} width="340" height={BOX.h} rx="8"
+        fill={WARN} opacity="0.1" />
+  <rect x="58" y={B_Y - BOX.h / 2} width="340" height={BOX.h} rx="8"
+        fill="none" stroke={WARN} stroke-width="2.5" />
+  <text x="228" y={B_Y + 8} text-anchor="middle" font-size={TYPE.sub}
+        fill={WARN} font-weight="600">украдена cookie</text>
+  <path d={`M410 ${B_Y} H${ACC.x - 8}`} stroke={WARN} stroke-width="2.5"
+        marker-end="url(#cp-tip-w)" />
+  <text x={(410 + ACC.x) / 2} y={B_Y - 18} text-anchor="middle" font-size={TYPE.note}
+        fill={WARN} opacity="0.9">ні пароля, ні коду</text>
+
+  <marker id="cp-tip" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11"
+          refX="9" refY="5.5" orient="auto">
+    <path d="M0 0 L10 5.5 L0 11 Z" fill="currentColor" opacity="0.5" />
+  </marker>
+  <marker id="cp-tip-w" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11"
+          refX="9" refY="5.5" orient="auto">
+    <path d="M0 0 L10 5.5 L0 11 Z" fill={WARN} />
+  </marker>
+</svg>

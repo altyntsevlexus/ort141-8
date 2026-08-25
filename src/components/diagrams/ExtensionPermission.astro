@@ -1,0 +1,130 @@
+---
+/**
+ * Slide 12 — the permission dialog nobody reads.
+ *
+ * The exact wording is the whole slide, so it is a mock of the real dialog
+ * rather than a description of one. The annotation is what the teacher points
+ * at: a bank login form is also «дані на сайті».
+ */
+---
+<div class="ep">
+  <div class="ep__dialog">
+    <strong class="ep__title">Додати «Coupon Finder 2024»?</strong>
+    <span class="ep__sub">Розширення отримає такі дозволи:</span>
+    <div class="ep__perm">
+      <span class="ep__eye"></span>
+      Читати й змінювати всі ваші дані на сайтах, які ви відвідуєте
+    </div>
+    <div class="ep__btns">
+      <span class="ep__btn ep__btn--add">Додати розширення</span>
+      <span class="ep__btn">Скасувати</span>
+    </div>
+  </div>
+  <div class="ep__note">
+    <span class="ep__arrow"></span>
+    <span>Форма входу в банк — це теж «дані на сайті»</span>
+  </div>
+</div>
+
+<style>
+  .ep {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: max(10px, 1.4cqw);
+    width: 100%;
+  }
+  .ep__dialog {
+    width: min(100%, 62cqw);
+    display: flex;
+    flex-direction: column;
+    gap: max(8px, 1cqw);
+    padding: max(14px, 1.9cqw) max(16px, 2.1cqw);
+    border-radius: 12px;
+    border: 1px solid rgba(16, 24, 40, 0.16);
+    background: rgba(255, 255, 255, 0.7);
+  }
+  .ep__title {
+    font-size: max(15px, 2cqw);
+    font-weight: 600;
+  }
+  .ep__sub {
+    font-size: max(11px, 1.4cqw);
+    opacity: 0.6;
+  }
+  /* The line that matters, and the only thing on the slide that is highlighted. */
+  .ep__perm {
+    display: flex;
+    align-items: center;
+    gap: max(9px, 1.1cqw);
+    padding: max(9px, 1.2cqw) max(11px, 1.4cqw);
+    border-radius: 8px;
+    background: rgba(194, 85, 31, 0.1);
+    border: 1px solid rgba(194, 85, 31, 0.3);
+    font-size: max(12px, 1.55cqw);
+    font-weight: 500;
+  }
+  /* An eye: it is watching. */
+  .ep__eye {
+    flex-shrink: 0;
+    width: max(17px, 2.1cqw);
+    height: max(11px, 1.35cqw);
+    border: 2px solid #c2551f;
+    border-radius: 50% / 60%;
+    position: relative;
+  }
+  .ep__eye::before {
+    content: '';
+    position: absolute;
+    inset: 22% 33%;
+    border-radius: 999px;
+    background: #c2551f;
+  }
+  .ep__btns {
+    display: flex;
+    gap: max(8px, 1cqw);
+    justify-content: flex-end;
+    padding-top: max(2px, 0.3cqw);
+  }
+  .ep__btn {
+    padding: max(6px, 0.8cqw) max(12px, 1.5cqw);
+    border-radius: 7px;
+    font-size: max(11px, 1.4cqw);
+    font-weight: 600;
+    border: 1px solid rgba(16, 24, 40, 0.18);
+    opacity: 0.7;
+  }
+  .ep__btn--add {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    opacity: 1;
+  }
+
+  .ep__note {
+    display: flex;
+    align-items: center;
+    gap: max(7px, 0.9cqw);
+    font-size: max(12px, 1.5cqw);
+    font-weight: 600;
+    color: #a2451a;
+  }
+  /* Points back up at the permission line. */
+  .ep__arrow {
+    width: max(9px, 1.1cqw);
+    height: max(9px, 1.1cqw);
+    border-left: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+    transform: rotate(45deg);
+  }
+
+  @container (max-width: 620px) {
+    .ep__dialog {
+      width: 100%;
+    }
+    .ep__btns {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+  }
+</style>

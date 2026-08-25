@@ -1,0 +1,54 @@
+---
+/** Slide 1 — the five stops of the lesson, in order. The whole slide. */
+const STOPS = ['паролі', 'шкідливе ПЗ', 'браузер', 'ШІ', 'аудит'];
+---
+<div class="ag">
+  {STOPS.map((label, i) => (
+    <>
+      {i > 0 && <span class="ag__step"></span>}
+      <span class="ag__chip">
+        <span class="ag__num">{i + 1}</span>
+        {label}
+      </span>
+    </>
+  ))}
+</div>
+
+<style>
+  .ag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: max(8px, 1.1cqw);
+    width: 100%;
+  }
+  .ag__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: max(8px, 1cqw);
+    padding: max(9px, 1.2cqw) max(14px, 1.8cqw);
+    border-radius: 999px;
+    border: 2px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+    color: var(--accent);
+    font-size: max(14px, 1.9cqw);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ag__num {
+    font-family: var(--mono);
+    font-size: max(11px, 1.4cqw);
+    opacity: 0.6;
+  }
+  /* A chevron between stops: the lesson runs in this order. */
+  .ag__step {
+    width: max(8px, 1cqw);
+    height: max(8px, 1cqw);
+    border-top: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+    transform: rotate(45deg);
+    opacity: 0.45;
+    flex-shrink: 0;
+  }
+</style>

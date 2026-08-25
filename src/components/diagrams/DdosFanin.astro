@@ -1,0 +1,52 @@
+---
+/**
+ * Slide 7 — the attack is on availability, not on data.
+ *
+ * The point of the picture is the fan-in: nothing is stolen, the server simply
+ * cannot answer any more, and the one who loses is the ordinary user on the
+ * right who never gets through.
+ */
+import { TYPE, VB, WARN } from './_shared';
+
+/** A cluster of hijacked devices, laid out in three ranks. */
+const BOTS = [40, 96, 152].flatMap((x, col) =>
+  [66, 128, 190, 252, 314].map((y) => ({ x, y: y + (col % 2) * 14 })),
+);
+const SRV = { x: 560, y: 128, w: 140, h: 150 };
+const TARGET = { x: SRV.x, y: SRV.y + SRV.h / 2 };
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Тисячі заражених пристроїв звертаються до сервера одночасно, і справжній користувач не проходить">
+  {BOTS.map(({ x, y }) => (
+    <g>
+      <path d={`M${x + 14} ${y} L${TARGET.x - 6} ${TARGET.y}`}
+            stroke={WARN} stroke-width="1.5" opacity="0.22" />
+      <circle cx={x} cy={y} r="9" fill={WARN} opacity="0.55" />
+    </g>
+  ))}
+  <text x="96" y="378" text-anchor="middle" font-size={TYPE.sub}
+        fill="currentColor" opacity="0.72">заражені пристрої</text>
+  <text x="96" y="34" text-anchor="middle" font-size={TYPE.note}
+        font-family="var(--mono)" fill={WARN} opacity="0.85">БОТНЕТ</text>
+
+  <rect x={SRV.x} y={SRV.y} width={SRV.w} height={SRV.h} rx="10"
+        fill="none" stroke="currentColor" stroke-width="2.5" />
+  {[0, 1, 2].map((i) => (
+    <rect x={SRV.x + 18} y={SRV.y + 20 + i * 44} width={SRV.w - 36} height="26" rx="5"
+          fill="currentColor" opacity="0.12" />
+  ))}
+  <text x={SRV.x + SRV.w / 2} y="378" text-anchor="middle" font-size={TYPE.sub}
+        fill="currentColor" opacity="0.72">сервер</text>
+
+  <!-- The ordinary request, refused. -->
+  <path d={`M930 ${TARGET.y} L${SRV.x + SRV.w + 46} ${TARGET.y}`}
+        stroke="currentColor" stroke-width="2.5" opacity="0.5" />
+  <g stroke={WARN} stroke-width="4" stroke-linecap="round">
+    <path d={`M${SRV.x + SRV.w + 10} ${TARGET.y - 16} l 26 32`} />
+    <path d={`M${SRV.x + SRV.w + 36} ${TARGET.y - 16} l -26 32`} />
+  </g>
+  <circle cx="952" cy={TARGET.y - 26} r="15" fill="none" stroke="currentColor" stroke-width="2.5" />
+  <path d={`M930 ${TARGET.y + 24} a 22 24 0 0 1 44 0`} fill="none" stroke="currentColor" stroke-width="2.5" />
+  <text x="900" y="378" text-anchor="middle" font-size={TYPE.sub}
+        fill="currentColor" opacity="0.72">не проходить</text>
+</svg>

@@ -1,0 +1,184 @@
+---
+/**
+ * Slide 6 — what is actually risky about free Wi-Fi.
+ *
+ * Two screens the class has both seen: a network list where the fake name looks
+ * more inviting than the real one, and the certificate warning they have all
+ * clicked past. Built in CSS because both are UI, and UI has to fit its text.
+ */
+const NETWORKS = [
+  { name: 'Kavyarnya_WiFi', locked: true, fake: false },
+  { name: 'Kavyarnya_Free_WiFi', locked: false, fake: true },
+  { name: 'FREE_WIFI_KYIV', locked: false, fake: false },
+];
+---
+<div class="wf">
+  <div class="wf__panel">
+    <span class="wf__cap">Яка з них справжня?</span>
+    <ul class="wf__nets">
+      {NETWORKS.map(({ name, locked, fake }) => (
+        <li class:list={['wf__net', fake && 'wf__net--fake']}>
+          <span class="wf__wave"></span>
+          <span class="wf__name">{name}</span>
+          {locked && <span class="wf__lock"></span>}
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="wf__panel">
+    <span class="wf__cap">А це вже доказ</span>
+    <div class="wf__warn">
+      <span class="wf__bang">!</span>
+      <strong>Ваше з’єднання не є приватним</strong>
+      <span class="wf__warntext">Хтось може перехоплювати те, що ви надсилаєте</span>
+      <div class="wf__btns">
+        <span class="wf__btn wf__btn--go">Повернутись</span>
+        <span class="wf__btn wf__btn--no">Продовжити</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .wf {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: max(18px, 2.8cqw);
+    width: 100%;
+    align-items: start;
+  }
+  .wf__panel {
+    display: flex;
+    flex-direction: column;
+    gap: max(8px, 1cqw);
+  }
+  .wf__cap {
+    font-family: var(--mono);
+    font-size: max(10px, 1.25cqw);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+  .wf__foot {
+    font-size: max(11px, 1.4cqw);
+    opacity: 0.6;
+  }
+
+  .wf__nets {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid rgba(16, 24, 40, 0.14);
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.55);
+  }
+  .wf__net {
+    display: flex;
+    align-items: center;
+    gap: max(9px, 1.1cqw);
+    padding: max(9px, 1.2cqw) max(11px, 1.4cqw);
+    font-size: max(12px, 1.5cqw);
+  }
+  .wf__net + .wf__net {
+    border-top: 1px solid rgba(16, 24, 40, 0.1);
+  }
+  /* The one the room will pick, marked only after they have picked it. */
+  .wf__net--fake {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    font-weight: 600;
+  }
+  /* Three rising bars: signal. */
+  .wf__wave {
+    flex-shrink: 0;
+    width: max(13px, 1.6cqw);
+    height: max(11px, 1.35cqw);
+    background:
+      linear-gradient(currentColor 0 0) 0 100% / 22% 45% no-repeat,
+      linear-gradient(currentColor 0 0) 39% 100% / 22% 72% no-repeat,
+      linear-gradient(currentColor 0 0) 78% 100% / 22% 100% no-repeat;
+    opacity: 0.55;
+  }
+  .wf__name {
+    font-family: var(--mono);
+  }
+  /* A padlock: shackle over a body. */
+  .wf__lock {
+    margin-left: auto;
+    flex-shrink: 0;
+    width: max(11px, 1.35cqw);
+    height: max(9px, 1.1cqw);
+    border: 2px solid currentColor;
+    border-radius: 2px;
+    position: relative;
+    opacity: 0.5;
+  }
+  .wf__lock::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    width: 58%;
+    height: 55%;
+    border: 2px solid currentColor;
+    border-bottom: none;
+    border-radius: 999px 999px 0 0;
+  }
+
+  .wf__warn {
+    display: flex;
+    flex-direction: column;
+    gap: max(6px, 0.8cqw);
+    padding: max(12px, 1.6cqw);
+    border-radius: 10px;
+    border: 1px solid rgba(194, 85, 31, 0.35);
+    background: rgba(194, 85, 31, 0.07);
+    font-size: max(12px, 1.5cqw);
+  }
+  .wf__bang {
+    width: max(20px, 2.4cqw);
+    height: max(20px, 2.4cqw);
+    border-radius: 999px;
+    background: #c2551f;
+    color: #fff;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    font-size: max(13px, 1.6cqw);
+  }
+  .wf__warntext {
+    font-size: max(11px, 1.35cqw);
+    opacity: 0.7;
+  }
+  .wf__btns {
+    display: flex;
+    gap: max(8px, 1cqw);
+    padding-top: max(4px, 0.5cqw);
+  }
+  .wf__btn {
+    padding: max(6px, 0.75cqw) max(11px, 1.4cqw);
+    border-radius: 7px;
+    font-size: max(11px, 1.35cqw);
+    font-weight: 600;
+  }
+  .wf__btn--go {
+    background: var(--accent);
+    color: #fff;
+  }
+  /* Struck through, because this is the one they must not press. */
+  .wf__btn--no {
+    border: 1px solid rgba(16, 24, 40, 0.2);
+    text-decoration: line-through;
+    text-decoration-color: #c2551f;
+    text-decoration-thickness: 2px;
+    opacity: 0.6;
+  }
+
+  @container (max-width: 620px) {
+    .wf {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

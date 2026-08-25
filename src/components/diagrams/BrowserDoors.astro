@@ -1,0 +1,73 @@
+---
+/**
+ * Slide 11 — three ways in, all of them inside one window.
+ *
+ * Names the three doors itself, so the slide needs no anchors repeating them.
+ */
+import { TYPE, VB } from './_shared';
+
+const WIN = { x: 310, y: 56, w: 380, h: 236 };
+/**
+ * Each door gets its own glyph. Three identical arrows would put the whole
+ * burden on the labels, which is the same mistake as three identical doors.
+ * Glyphs are drawn around their own origin and translated into place.
+ */
+const GLYPHS = {
+  /** A puzzle piece: an extension. */
+  puzzle: 'M-11 -12 h20 v6 a6 6 0 1 1 0 12 v6 h-20 z',
+  /** Two windows, one a copy of the other: a substituted site. */
+  copy: 'M-13 -11 h18 v15 h-18 z M-5 -4 h18 v15 h-18 z',
+  /** A cookie. */
+  cookie: 'M0 -12 a12 12 0 1 0 0 24 a12 12 0 1 0 0 -24 z',
+};
+
+const DOORS = [
+  { label: 'розширення', glyph: 'puzzle', from: { x: 96, y: 120 }, to: { x: WIN.x - 12, y: 130 } },
+  { label: 'підмінені сайти', glyph: 'copy', from: { x: 96, y: 300 }, to: { x: WIN.x - 12, y: 250 } },
+  { label: 'викрадені cookies', glyph: 'cookie', from: { x: 904, y: 300 }, to: { x: WIN.x + WIN.w + 12, y: 250 } },
+];
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Розширення, підмінені сайти та викрадені cookies — три входи в один браузер">
+  <!-- The browser: chrome bar, address pill, page. -->
+  <rect x={WIN.x} y={WIN.y} width={WIN.w} height={WIN.h} rx="12"
+        fill="none" stroke="currentColor" stroke-width="2.5" />
+  <path d={`M${WIN.x} ${WIN.y + 44} h ${WIN.w}`} stroke="currentColor" stroke-width="2" opacity="0.45" />
+  {[0, 1, 2].map((i) => (
+    <circle cx={WIN.x + 24 + i * 20} cy={WIN.y + 22} r="5" fill="currentColor" opacity="0.35" />
+  ))}
+  <rect x={WIN.x + 96} y={WIN.y + 10} width={WIN.w - 120} height="24" rx="12"
+        fill="currentColor" opacity="0.1" />
+  {[0, 1, 2, 3].map((i) => (
+    <rect x={WIN.x + 28} y={WIN.y + 74 + i * 34} width={WIN.w - 56 - (i % 2) * 90} height="16" rx="4"
+          fill="currentColor" opacity="0.08" />
+  ))}
+
+  {DOORS.map(({ label, glyph, from, to }) => {
+    const rightSide = from.x > 500;
+    return (
+      <g>
+        <path d={`M${from.x + (rightSide ? -34 : 34)} ${from.y} L${to.x} ${to.y}`}
+              stroke="var(--accent)" stroke-width="2.5" opacity="0.85"
+              marker-end="url(#bd-tip)" />
+        <circle cx={from.x} cy={from.y} r="27" fill="var(--accent)" opacity="0.12" />
+        <g transform={`translate(${from.x} ${from.y})`}>
+          <path d={GLYPHS[glyph]} fill="none" stroke="var(--accent)" stroke-width="2.5" />
+          {glyph === 'cookie' &&
+            [
+              [-4, -4],
+              [5, 1],
+              [-3, 6],
+            ].map(([dx, dy]) => <circle cx={dx} cy={dy} r="2.6" fill="var(--accent)" />)}
+        </g>
+        <text x={from.x} y={from.y + 58} text-anchor="middle" font-size={TYPE.sub}
+              fill="currentColor" opacity="0.78">{label}</text>
+      </g>
+    );
+  })}
+
+  <marker id="bd-tip" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12"
+          refX="10" refY="6" orient="auto">
+    <path d="M0 0 L11 6 L0 12 Z" fill="var(--accent)" />
+  </marker>
+</svg>
