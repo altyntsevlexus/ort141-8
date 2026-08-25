@@ -45,8 +45,17 @@ const slide = z.object({
   kicker: z.string(),
   title: z.string(),
   visual: visual.optional(),
-  /** Hard cap of three. A limit that is not enforced is a limit that erodes. */
-  anchors: z.array(z.string()).max(3).optional(),
+  /**
+   * One sentence at the foot of the slide, saying what the visual means. Not a
+   * restatement of the title, and not a list — the length cap is the whole
+   * point of the field. Optional: most slides do not need one.
+   */
+  idea: z.string().max(220).optional(),
+  /** Where to read more. Shown at the foot of the slide, in place of the idea. */
+  links: z
+    .array(z.object({ label: z.string(), href: z.string().url() }))
+    .max(3)
+    .optional(),
 });
 
 const themes = defineCollection({

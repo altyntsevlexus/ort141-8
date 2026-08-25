@@ -1,10 +1,7 @@
 import AgendaArc from './AgendaArc.astro';
-import AntivirusVsFirewall from './AntivirusVsFirewall.astro';
 import AuditChecklist from './AuditChecklist.astro';
 import BrowserDoors from './BrowserDoors.astro';
-import CallbackProtocol from './CallbackProtocol.astro';
 import CaseTimeline from './CaseTimeline.astro';
-import CookiePass from './CookiePass.astro';
 import DdosFanin from './DdosFanin.astro';
 import DeepfakeSource from './DeepfakeSource.astro';
 import DomainAnatomy from './DomainAnatomy.astro';
@@ -30,9 +27,7 @@ export const diagrams: Record<string, any> = {
   'wifi-risk': WifiRisk,
   'browser-doors': BrowserDoors,
   'extension-permission': ExtensionPermission,
-  'cookie-pass': CookiePass,
   'deepfake-source': DeepfakeSource,
-  'callback-protocol': CallbackProtocol,
   'takeaways': Takeaways,
   'password-strength': PasswordStrength,
   'leak-cascade': LeakCascade,
@@ -40,6 +35,5 @@ export const diagrams: Record<string, any> = {
   'case-timeline': CaseTimeline,
   'two-padlocks': TwoPadlocks,
   'domain-anatomy': DomainAnatomy,
-  'antivirus-vs-firewall': AntivirusVsFirewall,
   'audit-checklist': AuditChecklist,
 };

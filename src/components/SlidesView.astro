@@ -38,13 +38,12 @@ const { color, tint } = course.data;
                 <h2>{slide.title}</h2>
               </div>
               {slide.visual && <SlideVisual visual={slide.visual} />}
-              {slide.anchors && slide.anchors.length > 0 && (
-                <div class="slide__anchors">
-                  {slide.anchors.map((text) => (
-                    <span class="slide__anchor">
-                      <span data-dot style={`background: ${color}`} />
-                      {text}
-                    </span>
+              {slide.idea && <p class="slide__idea">{slide.idea}</p>}
+              {slide.links && slide.links.length > 0 && (
+                <div class="slide__links">
+                  {slide.links.map(({ label, href }) => (
+                    <a href={href} target="_blank" rel="noreferrer"
+                       style={`color: ${color}`}>{label}</a>
                   ))}
                 </div>
               )}
@@ -68,6 +67,8 @@ const { color, tint } = course.data;
       <Content components={mdxComponents} />
     </section>
   )}
+
+  <Sources sources={sources} />
 
   <slot />
 </main>

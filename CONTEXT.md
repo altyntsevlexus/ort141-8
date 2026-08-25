@@ -74,15 +74,22 @@ Kind is **not** part of the URL. All three are renderings of the same address, s
   not part of a Презентація — they live in the planning material outside this
   repository.
 
-  A slide therefore has four named parts, and only four:
+  A slide therefore has these named parts, and no others:
 
   - **Kicker** — where in the lesson we are («Шкідливе ПЗ · класифікація 2»).
   - **Title** — the one claim the slide makes, as a sentence.
   - **Visual** — the diagram, table, code fragment or image that carries it. Optional:
     some slides are a title and nothing else, and that is a legitimate slide.
-  - **Anchor** — a short phrase the class can glance at, at most **three** per slide.
-    An anchor is not a bullet: it is a handful of words, not a sentence, and it never
-    restates the title.
+  - **Idea** — one sentence at the foot of the slide, saying what the visual *means*.
+    Optional, and most slides do not have one. An Idea explains the picture; it never
+    restates the Title, and it is never a list — there is at most one per slide.
+  - **Links** — where to read more, on the few slides that are about real events.
+    Shown at the foot in place of an Idea.
+
+  > An earlier model allowed up to three **anchors** per slide: short glanceable
+  > phrases with bullets. They failed in both directions — three fragments read as a
+  > summary the class could read *instead of* listening, and they took the height the
+  > visual needed. One sentence, or nothing, replaced them.
 
   **Джерела** are where a Тема's material came from — a textbook section, an earlier
   deck, an external page. They belong to the Тема, not to any one slide, and are shown
