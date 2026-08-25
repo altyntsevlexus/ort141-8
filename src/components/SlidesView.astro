@@ -25,15 +25,17 @@ const { color, tint } = course.data;
             style={`background: ${tint}`}
             data-slide={i}
           >
-            <div class="slide__kicker" style={`color: ${color}`}>{slide.kicker}</div>
-            <h2>{slide.title}</h2>
-            <div class="slide__bullets">
-              {slide.bullets.map((text) => (
-                <div class="slide__bullet">
-                  <span data-dot style={`background: ${color}`}></span>
-                  <div>{text}</div>
-                </div>
-              ))}
+            <div class="slide__inner">
+              <div class="slide__kicker" style={`color: ${color}`}>{slide.kicker}</div>
+              <h2>{slide.title}</h2>
+              <div class="slide__bullets">
+                {slide.bullets.map((text) => (
+                  <div class="slide__bullet">
+                    <span data-dot style={`background: ${color}`}></span>
+                    <div>{text}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         ))}
@@ -41,6 +43,7 @@ const { color, tint } = course.data;
           <button class="deck__nav" data-prev aria-label="Попередній слайд">←</button>
           <div class="deck__count" data-count>1 / {slides.length}</div>
           <button class="deck__nav" data-next aria-label="Наступний слайд">→</button>
+          <button class="deck__full" data-full>На весь екран</button>
         </div>
       </div>
     ) : (
@@ -52,15 +55,17 @@ const { color, tint } = course.data;
 </main>
 
 <script>
-  // Slides step within the deck; unlike the prototype they do not wrap, so the
-  // end of a deck is visible rather than looping silently back to slide 1.
   const deck = document.querySelector<HTMLElement>('[data-deck]');
+
   if (deck) {
     const slides = [...deck.querySelectorAll<HTMLElement>('[data-slide]')];
     const prev = deck.querySelector<HTMLButtonElement>('[data-prev]')!;
     const next = deck.querySelector<HTMLButtonElement>('[data-next]')!;
     const count = deck.querySelector<HTMLElement>('[data-count]')!;
+    const full = deck.querySelector<HTMLButtonElement>('[data-full]')!;
     let at = 0;
+
+    // --- Stepping. Does not wrap, so the ends of the deck are visible. ---
 
     const show = (i: number) => {
       at = Math.min(Math.max(i, 0), slides.length - 1);
@@ -72,9 +77,101 @@ const { color, tint } = course.data;
 
     prev.addEventListener('click', () => show(at - 1));
     next.addEventListener('click', () => show(at + 1));
+
+    // --- Fullscreen. ---
+
+    // Safari still needs the webkit-prefixed API; iOS Safari has neither for
+    // ordinary elements, so that platform falls back to a fixed overlay.
+    type WebkitEl = HTMLElement & { webkitRequestFullscreen?: () => Promise<void> };
+    type WebkitDoc = Document & {
+      webkitFullscreenElement?: Element | null;
+      webkitExitFullscreen?: () => Promise<void>;
+    };
+    const doc = document as WebkitDoc;
+    const el = deck as WebkitEl;
+
+    const nativeSupported = !!(el.requestFullscreen || el.webkitRequestFullscreen);
+    const nativeActive = () =>
+      (doc.fullscreenElement ?? doc.webkitFullscreenElement) === deck;
+    const isFull = () => deck.classList.contains('deck-full');
+
+    // While presenting, the control bar gets out of the way until the mouse
+    // moves. Cleared on exit so a windowed deck never hides its own controls.
+    let idle: ReturnType<typeof setTimeout> | undefined;
+    const stirIdle = () => {
+      clearTimeout(idle);
+      deck.classList.remove('is-idle');
+      if (isFull()) idle = setTimeout(() => deck.classList.add('is-idle'), 2500);
+    };
+    deck.addEventListener('pointermove', stirIdle);
+    deck.addEventListener('pointerdown', stirIdle);
+
+    const paint = (on: boolean) => {
+      deck.classList.toggle('deck-full', on);
+      full.textContent = on ? 'Згорнути' : 'На весь екран';
+      full.setAttribute('aria-pressed', String(on));
+      if (on) stirIdle();
+      else {
+        clearTimeout(idle);
+        deck.classList.remove('is-idle');
+      }
+    };
+
+    const enter = async () => {
+      if (nativeSupported) {
+        try {
+          await (el.requestFullscreen?.() ?? el.webkitRequestFullscreen?.());
+          return; // fullscreenchange paints.
+        } catch {
+          // Denied or unsupported in practice — fall through to the overlay.
+        }
+      }
+      deck.classList.add('is-immersive');
+      document.body.classList.add('is-immersive-lock');
+      paint(true);
+    };
+
+    const exit = async () => {
+      if (nativeActive()) {
+        await (doc.exitFullscreen?.() ?? doc.webkitExitFullscreen?.());
+        return; // fullscreenchange paints.
+      }
+      deck.classList.remove('is-immersive');
+      document.body.classList.remove('is-immersive-lock');
+      paint(false);
+    };
+
+    full.addEventListener('click', () => (isFull() ? exit() : enter()));
+
+    // The browser can leave fullscreen on its own (Esc, window switch), so the
+    // button label follows the actual state rather than what we last asked for.
+    const onChange = () => paint(nativeActive());
+    document.addEventListener('fullscreenchange', onChange);
+    document.addEventListener('webkitfullscreenchange', onChange);
+
+    // Advancing by clicking the slide is a presenting convenience, so it only
+    // applies when actually presenting.
+    slides.forEach((s) =>
+      s.addEventListener('click', () => {
+        if (isFull()) show(at + 1);
+      }),
+    );
+
+    // --- Keyboard. ---
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') show(at - 1);
-      if (e.key === 'ArrowRight') show(at + 1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(at - 1);
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') show(at + 1);
+      if (e.key === ' ') {
+        // Space is page-scroll by default; only claim it while presenting.
+        if (isFull()) {
+          e.preventDefault();
+          show(at + 1);
+        }
+      }
+      if (e.key === 'f' && !isFull()) enter();
+      // Native fullscreen handles its own Esc; the overlay fallback does not.
+      if (e.key === 'Escape' && isFull() && !nativeActive()) exit();
     });
 
     show(0);

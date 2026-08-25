@@ -673,6 +673,13 @@ h3 {
 
 /* --- Slides ----------------------------------------------------------- */
 
+/* Slide type scales with the slide's own width via container query units, so
+   one set of numbers serves a phone, the in-page deck, and a projector at
+   fullscreen. The cqw values are the design's pixel sizes over its 1114px
+   reference width, so the in-page deck reproduces the design exactly and every
+   other size stays proportional to it. Each has a px floor for narrow screens
+   and deliberately no ceiling — a cap would flatten the design on a 4K
+   projector. */
 .deck {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -680,50 +687,58 @@ h3 {
   overflow: hidden;
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
+/* .slide carries no padding: cqw resolves against a container's CONTENT box, so
+   padding here would shrink the reference every child measures against. All
+   spacing lives on .slide__inner instead. */
 .slide {
+  container-type: inline-size;
   aspect-ratio: 16 / 9;
-  padding: 64px 72px;
   display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 22px;
 }
 .slide.is-active {
+  display: block;
+}
+.slide__inner {
+  height: 100%;
+  padding: max(20px, 5.735cqw) max(20px, 6.452cqw);
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: max(12px, 1.971cqw);
 }
 .slide__kicker {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: max(10px, 1.075cqw);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .slide h2 {
-  font-size: 46px;
+  font-size: max(22px, 4.122cqw);
   line-height: 1.15;
   margin: 0;
   letter-spacing: -0.02em;
-  max-width: 780px;
+  max-width: 69.89cqw;
   text-wrap: pretty;
 }
 .slide__bullets {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-width: 720px;
+  gap: max(8px, 1.075cqw);
+  max-width: 64.52cqw;
 }
 .slide__bullet {
   display: flex;
-  gap: 14px;
+  gap: max(10px, 1.254cqw);
   align-items: flex-start;
-  font-size: 21px;
+  font-size: max(15px, 1.882cqw);
   line-height: 1.5;
   color: var(--text-body);
 }
 .slide__bullet span[data-dot] {
-  width: 7px;
-  height: 7px;
+  width: max(5px, 0.627cqw);
+  height: max(5px, 0.627cqw);
   border-radius: 999px;
-  margin-top: 11px;
+  margin-top: max(7px, 0.986cqw);
   flex-shrink: 0;
 }
 .deck__bar {
@@ -760,6 +775,80 @@ h3 {
   font-family: var(--mono);
   font-size: 13px;
   color: var(--muted);
+}
+.deck__full {
+  margin-left: 12px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: border-color 0.16s ease;
+}
+.deck__full:hover {
+  border-color: var(--border-hover);
+}
+
+/* --- Slides, fullscreen ---------------------------------------------- */
+
+/* Two paths to the same look: the Fullscreen API where it exists, and a fixed
+   overlay where it does not (iOS Safari refuses requestFullscreen on anything
+   but a <video>). Both land on .deck-full. */
+.deck-full {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.deck.is-immersive {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+body.is-immersive-lock {
+  overflow: hidden;
+}
+.deck-full {
+  position: relative;
+}
+.deck-full .slide.is-active {
+  /* Letterbox: fit 16:9 inside the screen whichever way it is constrained.
+     The bar overlays rather than stacks, so the slide gets the whole screen. */
+  width: min(100%, calc(100dvh * 16 / 9));
+  margin: 0 auto;
+  cursor: pointer;
+}
+.deck-full .deck__bar {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  height: auto;
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 22px rgba(16, 24, 40, 0.14);
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+/* Out of the way while presenting; any pointer movement brings it back. */
+.deck-full.is-idle .deck__bar {
+  opacity: 0;
+  visibility: hidden;
+}
+.deck-full.is-idle .slide.is-active {
+  cursor: none;
 }
 
 /* --- MDX component library ------------------------------------------- */
@@ -1115,20 +1204,20 @@ kbd {
     display: block;
   }
 
+  /* A 16:9 box is too short for real slide text on a phone; let it grow.
+     Sizes come from the container-query clamps, not from overrides here. */
   .slide {
-    padding: 28px 24px;
-    gap: 14px;
     aspect-ratio: auto;
     min-height: 320px;
   }
-  .slide h2 {
-    font-size: 26px;
+  .deck-full .slide.is-active {
+    width: 100%;
   }
-  .slide__bullet {
-    font-size: 16px;
+  .deck__bar {
+    gap: 14px;
   }
-  .slide__bullet span[data-dot] {
-    margin-top: 8px;
+  .deck__full {
+    margin-left: 0;
   }
 
   .stepper {
