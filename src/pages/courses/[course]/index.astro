@@ -1,0 +1,57 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../../layouts/Base.astro';
+import { allCourses, homeUrl, themeSlug, themesOf, themeUrl } from '../../../lib/nav';
+
+export const getStaticPaths = (async () => {
+  const courses = await allCourses();
+  return courses.map((course) => ({
+    params: { course: course.id },
+    props: { course },
+  }));
+}) satisfies GetStaticPaths;
+
+const { course } = Astro.props;
+const themes = await themesOf(course.id);
+const { title, desc, glyph, color, tint } = course.data;
+---
+
+<Base
+  title={title}
+  crumbs={[{ label: 'Курси', href: homeUrl }, { label: title }]}
+>
+  <main class="shell page" style="padding-top: 44px">
+    <div class="course-hero" style={`background: ${tint}`}>
+      <div class="course-hero__glyph" style={`background: ${color}`}>{glyph}</div>
+      <div>
+        <h1>{title}</h1>
+        <p>{desc}</p>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Теми курсу</h2>
+
+    <div class="timeline">
+      {
+        themes.map((theme, i) => (
+          <div class="timeline__row">
+            <div class="timeline__rail">
+              <div class="timeline__num" style={`color: ${color}`}>{i + 1}</div>
+              <div class="timeline__line"></div>
+            </div>
+            <a class="theme-card" href={themeUrl(course.id, themeSlug(theme))}>
+              <div style="flex: 1">
+                <div class="theme-card__title">{theme.data.title}</div>
+                <div class="theme-card__meta">{theme.data.meta}</div>
+              </div>
+              <div class="theme-card__kind" style={`background: ${tint}; color: ${color}`}>
+                {theme.data.kind}
+              </div>
+              <div class="theme-card__arrow" aria-hidden="true">→</div>
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </main>
+</Base>

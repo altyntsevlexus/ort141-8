@@ -1,0 +1,19 @@
+---
+import { themeSlug, themeUrl } from '../lib/nav';
+import type { Theme } from '../lib/nav';
+
+interface Props {
+  courseId: string;
+  prev: Theme;
+  next: Theme;
+  /** Конспект draws its own top rule; PDF and slides sit on plain background. */
+  bare?: boolean;
+}
+const { courseId, prev, next, bare = false } = Astro.props;
+---
+<nav class={bare ? 'stepper stepper--bare' : 'stepper'} aria-label="Між темами">
+  <a class="btn" href={themeUrl(courseId, themeSlug(prev))}>← {prev.data.title}</a>
+  <a class="btn btn--primary" href={themeUrl(courseId, themeSlug(next))}>
+    {next.data.title} →
+  </a>
+</nav>

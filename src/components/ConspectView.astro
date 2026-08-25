@@ -1,0 +1,107 @@
+---
+import { render } from 'astro:content';
+import { mdxComponents } from './mdx-components';
+import type { Course, Theme } from '../lib/nav';
+
+interface Props {
+  course: Course;
+  theme: Theme;
+  number: number;
+}
+const { course, theme, number } = Astro.props;
+const { Content } = await render(theme);
+const { outline = [], duration, lead } = theme.data;
+---
+<main class="shell lesson">
+  {
+    outline.length > 0 && (
+      /* <details open> so the outline is expanded on desktop and without JS;
+         the script below collapses it on phones, where it would otherwise
+         push the article off the first screen. */
+      <details class="outline" open>
+        <summary class="outline__summary">
+          <span class="mono-label">Зміст теми</span>
+          <span class="outline__chevron" aria-hidden="true">▾</span>
+        </summary>
+        <div class="outline__body">
+          <div class="outline__list">
+            {outline.map((item, i) => (
+              <a href={`#${item.id}`} class={i === 0 ? 'is-active' : undefined}>
+                {item.label}
+              </a>
+            ))}
+          </div>
+          {duration && (
+            <div class="outline__time">
+              Орієнтовний час<br />
+              <strong>{duration}</strong>
+            </div>
+          )}
+        </div>
+      </details>
+    )
+  }
+
+  <article class="article">
+    <div class="theme-kicker" style={`color: ${course.data.color}`}>
+      Тема {number} · Конспект
+    </div>
+    <h1>{theme.data.title}</h1>
+    {lead && <p class="article__lead">{lead}</p>}
+    <Content components={mdxComponents} />
+    <slot />
+  </article>
+</main>
+
+<script>
+  const outline = document.querySelector<HTMLDetailsElement>('details.outline');
+
+  if (outline) {
+    // Collapsed on phones, always open from tablet up. Only follow the viewport
+    // until the reader touches it themselves — after that, respect their choice.
+    const narrow = window.matchMedia('(max-width: 900px)');
+    let userToggled = false;
+
+    const sync = () => {
+      if (!userToggled) outline.open = !narrow.matches;
+    };
+    outline.addEventListener('toggle', () => {
+      if (narrow.matches) userToggled = true;
+    });
+    narrow.addEventListener('change', () => {
+      userToggled = false;
+      sync();
+    });
+    sync();
+
+    // Jumping to a section should close the outline again on phones.
+    outline.querySelectorAll('a').forEach((a) =>
+      a.addEventListener('click', () => {
+        if (narrow.matches) outline.open = false;
+      }),
+    );
+  }
+
+  // Highlight the outline entry for the section currently in view.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.outline__list a')];
+  const sections = links
+    .map((a) => document.querySelector(a.hash))
+    .filter((el): el is Element => el !== null);
+
+  if (sections.length > 0 && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length === 0) return;
+        const top = visible.reduce((a, b) =>
+          a.boundingClientRect.top < b.boundingClientRect.top ? a : b,
+        );
+        links.forEach((a) =>
+          a.classList.toggle('is-active', a.hash === `#${top.target.id}`),
+        );
+      },
+      { rootMargin: '-120px 0px -60% 0px', threshold: 0 },
+    );
+    sections.forEach((s) => observer.observe(s));
+  }
+</script>
