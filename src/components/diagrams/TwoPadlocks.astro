@@ -1,0 +1,43 @@
+---
+/**
+ * Slide 13 — the padlock is identical on both. That identity IS the argument,
+ * so the two address bars are drawn the same and only the domain differs.
+ */
+import { TYPE, VB, WARN } from './_shared';
+const BARS = [
+  { url: 'privatbank.ua', real: 'privatbank.ua', verdict: 'справжній', ok: true, y: 60 },
+  { url: 'privatbank.ua.login-secure.com', real: 'login-secure.com',
+    verdict: 'підроблений', ok: false, y: 240 },
+];
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Два адресні рядки з однаковим замком: справжній і підроблений сайт">
+  {BARS.map(({ url, real, verdict, ok, y }) => (
+    <g>
+      <rect x="20" y={y} width="720" height="96" rx="48"
+            fill="currentColor" opacity="0.05" />
+      <rect x="20" y={y} width="720" height="96" rx="48"
+            fill="none" stroke="currentColor" stroke-width="2" opacity="0.35" />
+
+      <!-- Identical padlock on both bars — deliberately not colour-coded. -->
+      <g transform={`translate(58 ${y + 30})`}>
+        <rect x="0" y="14" width="30" height="24" rx="5" fill="currentColor" opacity="0.75" />
+        <path d="M7 14 V9 a8 8 0 0 1 16 0 V14" fill="none"
+              stroke="currentColor" stroke-width="3.5" opacity="0.75" />
+      </g>
+
+      <text x="118" y={y + 60} font-size={TYPE.mono} font-family="var(--mono)" fill="currentColor">
+        {url}
+      </text>
+
+      <text x="772" y={y + 40} font-size={TYPE.sub} font-weight="600"
+            fill={ok ? 'var(--accent)' : WARN}>{verdict}</text>
+      <text x="772" y={y + 72} font-size={TYPE.note} fill="currentColor" opacity="0.7">
+        домен {real}
+      </text>
+    </g>
+  ))}
+  <text x="20" y="400" font-size={TYPE.note} fill="currentColor" opacity="0.62">
+    замок однаковий в обох випадках — він каже лише «з’єднання зашифроване»
+  </text>
+</svg>

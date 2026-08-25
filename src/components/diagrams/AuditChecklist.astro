@@ -1,0 +1,123 @@
+---
+/**
+ * Slide 20 — the six-point self-audit, counted on fingers, shown to nobody.
+ *
+ * Six statements rather than six questions: the exercise is to count the ones
+ * that are true, so the wording has to be countable. Two columns of three,
+ * because a single column of six pushed the table header off the top of the
+ * slide behind the two-line title.
+ *
+ * The scale was missing from the slide entirely — it lived only in the teacher's
+ * plan, which meant the class saw a checklist with no way to read its own score.
+ */
+const ITEMS = [
+  'Пароль до пошти не повторюється більше ніде',
+  'На пошті увімкнена двофакторна автентифікація',
+  'Оновлення встановлюються, а не відкладаються',
+  'Захисник Windows увімкнено',
+  'Знаю, які розширення стоять у моєму браузері',
+  'Важливі файли є ще десь, крім цього пристрою',
+];
+
+const BANDS = [
+  { score: '5–6', verdict: 'добре тримаєтесь', tone: 'good' },
+  { score: '3–4', verdict: 'є що підтягнути', tone: 'mid' },
+  { score: '0–2', verdict: 'почніть з пошти', tone: 'low' },
+];
+---
+<div class="au">
+  <ol class="au__list">
+    {ITEMS.map((text) => (
+      <li class="au__item">
+        <span class="au__box"></span>
+        <span class="au__text">{text}</span>
+      </li>
+    ))}
+  </ol>
+  <div class="au__scale">
+    {BANDS.map(({ score, verdict, tone }) => (
+      <div class:list={['au__band', `au__band--${tone}`]}>
+        <span class="au__score">{score}</span>
+        <span class="au__verdict">{verdict}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .au {
+    display: flex;
+    flex-direction: column;
+    gap: max(16px, 2.4cqw);
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Column-major, so 1–3 read down the left and 4–6 down the right. */
+  .au__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    column-gap: max(20px, 3.2cqw);
+    row-gap: max(10px, 1.5cqw);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: au;
+  }
+  .au__item {
+    display: flex;
+    align-items: center;
+    gap: max(9px, 1.2cqw);
+    font-size: max(13px, 1.62cqw);
+    line-height: 1.35;
+  }
+  .au__box {
+    flex-shrink: 0;
+    width: max(16px, 2cqw);
+    height: max(16px, 2cqw);
+    border: 2px solid var(--accent);
+    border-radius: 5px;
+    opacity: 0.7;
+  }
+  .au__text {
+    color: var(--text-body);
+  }
+
+  /* Three bands the class reads its own count against. */
+  .au__scale {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: max(8px, 1.2cqw);
+    padding-top: max(10px, 1.4cqw);
+    border-top: 1px solid rgba(16, 24, 40, 0.12);
+  }
+  .au__band {
+    display: flex;
+    align-items: baseline;
+    gap: max(7px, 0.9cqw);
+    padding: max(7px, 0.9cqw) max(11px, 1.4cqw);
+    border-radius: 8px;
+  }
+  .au__score {
+    font-family: var(--mono);
+    font-size: max(14px, 1.9cqw);
+    font-weight: 600;
+  }
+  .au__verdict {
+    font-size: max(12px, 1.45cqw);
+    opacity: 0.75;
+  }
+  .au__band--good {
+    background: color-mix(in srgb, var(--accent) 13%, transparent);
+    color: var(--accent);
+  }
+  .au__band--mid {
+    background: rgba(16, 24, 40, 0.05);
+  }
+  .au__band--low {
+    background: rgba(194, 85, 31, 0.11);
+    color: #a2451a;
+  }
+</style>

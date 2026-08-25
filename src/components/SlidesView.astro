@@ -1,5 +1,7 @@
 ---
 import { render } from 'astro:content';
+import SlideVisual from './SlideVisual.astro';
+import Sources from './Sources.astro';
 import { mdxComponents } from './mdx-components';
 import type { Course, Theme } from '../lib/nav';
 
@@ -10,6 +12,7 @@ interface Props {
 }
 const { course, theme, number } = Astro.props;
 const slides = theme.data.slides ?? [];
+const sources = theme.data.sources ?? [];
 const hasSupport = (theme.body ?? '').trim().length > 0;
 const { Content } = await render(theme);
 const { color, tint } = course.data;
@@ -26,20 +29,25 @@ const { color, tint } = course.data;
         {slides.map((slide, i) => (
           <div
             class={i === 0 ? 'slide is-active' : 'slide'}
-            style={`background: ${tint}`}
+            style={`background: ${tint}; --accent: ${color}`}
             data-slide={i}
           >
             <div class="slide__inner">
-              <div class="slide__kicker" style={`color: ${color}`}>{slide.kicker}</div>
-              <h2>{slide.title}</h2>
-              <div class="slide__bullets">
-                {slide.bullets.map((text) => (
-                  <div class="slide__bullet">
-                    <span data-dot style={`background: ${color}`}></span>
-                    <div>{text}</div>
-                  </div>
-                ))}
+              <div class="slide__head">
+                <div class="slide__kicker" style={`color: ${color}`}>{slide.kicker}</div>
+                <h2>{slide.title}</h2>
               </div>
+              {slide.visual && <SlideVisual visual={slide.visual} />}
+              {slide.anchors && slide.anchors.length > 0 && (
+                <div class="slide__anchors">
+                  {slide.anchors.map((text) => (
+                    <span class="slide__anchor">
+                      <span data-dot style={`background: ${color}`} />
+                      {text}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -166,6 +174,15 @@ const { color, tint } = course.data;
         if (isFull()) show(at + 1);
       }),
     );
+
+    // Exercise tables hide their answers until asked. Clicking a row reveals it;
+    // clicking the slide background still advances, so this stops propagation.
+    deck.querySelectorAll<HTMLElement>('td.is-hidden').forEach((cell) => {
+      cell.addEventListener('click', (e) => {
+        e.stopPropagation();
+        cell.classList.toggle('is-shown');
+      });
+    });
 
     // --- Keyboard. ---
 
