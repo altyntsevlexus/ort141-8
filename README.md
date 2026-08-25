@@ -18,7 +18,7 @@ npm run dev
 ```
 src/content/courses/<course>.json      метадані курсу (назва, колір, глиф)
 src/content/themes/<course>/<slug>.mdx одна тема
-src/components/                        компоненти для конспектів + вʼюери
+src/components/                        компоненти для конспектів + в’юери
 public/pdf/                            файли PDF
 ```
 
@@ -27,16 +27,27 @@ public/pdf/                            файли PDF
 
 ## Як додати тему
 
-Створіть `src/content/themes/<course>/<slug>.mdx`. Обовʼязкові поля frontmatter:
+Створіть `src/content/themes/<course>/<slug>.mdx`. Обов’язкові поля frontmatter:
 `title`, `course`, `kind`, `meta`, `order`.
 
 Для конспекту додайте `outline`, `duration`, `lead` і використовуйте компоненти —
 вони доступні без імпорту: `Section`, `Syntax`, `CodeBlock`, `Callout`, `Steps`,
-`Practice`, `Keys`, `Screenshot`. Приклад:
-[`excel/references.mdx`](src/content/themes/excel/references.mdx).
+`Practice`, `Keys`, `Screenshot`. Приклади вжитку `CodeBlock` і `Callout`:
+[`blok1/technical-attacks.mdx`](src/content/themes/blok1/technical-attacks.mdx).
+Решта компонентів поки не використана — вони чекають на перший конспект.
 
 Для PDF додайте `pdf: { file, pages }` і покладіть файл у `public/pdf/`.
 Для презентації — масив `slides` із `kicker`, `title`, `bullets`.
+
+**Додаткові матеріали.** Текст у тілі MDX показується під будь-яким вʼюером —
+словник, памʼятка, домашнє завдання. Файли додаються через `attachments`:
+
+```yaml
+attachments:
+  - label: "Кібер-аудит — роздатка"
+    file: "kiberaudyt-rozdatka.pdf"
+    note: "A5 · 1 сторінка"
+```
 
 ## Показ презентації
 
@@ -63,8 +74,8 @@ public/pdf/                            файли PDF
 
 ## Статус
 
-Структура готова, контент — заготовки. Реальний матеріал є лише в темі
-«Абсолютні та відносні посилання» (зразок для решти).
+**Блок 1** — уроки 1 і 2 з матеріалом, уроки 3–6 позначені `pending`.
+**Блоки 2 і 3** — назви й обсяг є, тем ще немає.
 
-Чотири курси на головній — **placeholder із прототипу** (Excel, Python, Figma,
-веб-розробка). Їх треба замінити на реальні блоки курсу, коли план буде готовий.
+Плани уроків і матеріали для викладання — у `2026-2027/`, поза цим репозиторієм.
+План уроку 2: `2026-2027/PLAN-urok2-tekhnichni-ataky.md`.

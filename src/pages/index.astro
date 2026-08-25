@@ -27,16 +27,16 @@ const cards = await Promise.all(
                 {course.data.glyph}
               </div>
               <div class="course-card__level" style={`color: ${course.data.color}`}>
-                {course.data.level}
+                {course.data.span}
               </div>
             </div>
             <div class="course-card__body">
               <h2 class="course-card__title">{course.data.title}</h2>
               <p class="course-card__desc">{course.data.desc}</p>
               <div class="course-card__meta">
-                <span>{themeCount} тем</span>
+                <span>{themeCount > 0 ? `${themeCount} тем` : "матеріали готуються"}</span>
                 <i aria-hidden="true">•</i>
-                <span>{course.data.hours}</span>
+                <span>{course.data.load}</span>
               </div>
             </div>
           </a>

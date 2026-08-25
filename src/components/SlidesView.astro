@@ -1,4 +1,7 @@
 ---
+import { render } from 'astro:content';
+import Attachments from './Attachments.astro';
+import { mdxComponents } from './mdx-components';
 import type { Course, Theme } from '../lib/nav';
 
 interface Props {
@@ -8,6 +11,9 @@ interface Props {
 }
 const { course, theme, number } = Astro.props;
 const slides = theme.data.slides ?? [];
+const attachments = theme.data.attachments ?? [];
+const hasSupport = (theme.body ?? '').trim().length > 0;
+const { Content } = await render(theme);
 const { color, tint } = course.data;
 ---
 <main class="shell page" style="padding-top: 36px; padding-bottom: 80px">
@@ -50,6 +56,13 @@ const { color, tint } = course.data;
       <p class="empty-note">Слайди ще не додано.</p>
     )
   }
+
+  {hasSupport && (
+    <section class="support">
+      <Content components={mdxComponents} />
+    </section>
+  )}
+  <Attachments attachments={attachments} />
 
   <slot />
 </main>
