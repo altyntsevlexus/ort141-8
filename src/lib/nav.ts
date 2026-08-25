@@ -28,17 +28,17 @@ export const courseOf = async (theme: Theme) => {
 };
 
 /**
- * Prev/next within a course, wrapping at both ends and crossing kinds freely —
- * matching the prototype's stepTheme(). Returns null for a single-theme course.
+ * Prev/next within a course. Crosses kinds freely, but does NOT wrap: the first
+ * theme has no previous and the last has no next. The prototype wrapped via
+ * modulo, which silently sent a reader at theme 1 to the end of the course.
  */
 export async function stepper(course: Course, theme: Theme) {
   const themes = await themesOf(course.id);
   const i = themes.findIndex((t) => t.id === theme.id);
-  if (themes.length < 2 || i === -1) return null;
-  const at = (d: number) => themes[(i + d + themes.length) % themes.length];
+  if (i === -1) return null;
   return {
     index: i,
-    prev: at(-1),
-    next: at(1),
+    prev: i > 0 ? themes[i - 1] : null,
+    next: i < themes.length - 1 ? themes[i + 1] : null,
   };
 }

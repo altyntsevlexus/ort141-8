@@ -29,8 +29,9 @@ A Тема has a position (its number in the Курс), a title, a short meta li
 exactly one **Kind**. It is addressable at `/courses/<course-slug>/<theme-slug>/`.
 
 Themes within a Курс are ordered, and that order is what «Попередня тема» /
-«Наступна тема» step through. Stepping wraps around at both ends and crosses Kinds
-freely — a Конспект's «Наступна тема» may land on a PDF.
+«Наступна тема» step through. Stepping crosses Kinds freely — a Конспект's «Наступна
+тема» may land on a PDF — but it does **not** wrap: the first Тема has no previous and
+the last has no next. A Курс is a sequence with two ends, not a loop.
 
 ## Kind
 

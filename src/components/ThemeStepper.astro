@@ -4,16 +4,32 @@ import type { Theme } from '../lib/nav';
 
 interface Props {
   courseId: string;
-  prev: Theme;
-  next: Theme;
+  prev: Theme | null;
+  next: Theme | null;
   /** Конспект draws its own top rule; PDF and slides sit on plain background. */
   bare?: boolean;
 }
 const { courseId, prev, next, bare = false } = Astro.props;
 ---
-<nav class={bare ? 'stepper stepper--bare' : 'stepper'} aria-label="Між темами">
-  <a class="btn" href={themeUrl(courseId, themeSlug(prev))}>← {prev.data.title}</a>
-  <a class="btn btn--primary" href={themeUrl(courseId, themeSlug(next))}>
-    {next.data.title} →
-  </a>
-</nav>
+{
+  (prev || next) && (
+    <nav class={bare ? 'stepper stepper--bare' : 'stepper'} aria-label="Між темами">
+      {prev && (
+        <a class="btn" href={themeUrl(courseId, themeSlug(prev))} rel="prev">
+          ← {prev.data.title}
+        </a>
+      )}
+      {/* Keeps «наступна» hard right when there is no «попередня». */}
+      {next && (
+        <a
+          class="btn btn--primary"
+          href={themeUrl(courseId, themeSlug(next))}
+          rel="next"
+          style={prev ? undefined : 'margin-left: auto'}
+        >
+          {next.data.title} →
+        </a>
+      )}
+    </nav>
+  )
+}
