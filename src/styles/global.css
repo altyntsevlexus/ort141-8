@@ -719,7 +719,7 @@ h3 {
 }
 .slide__inner {
   height: 100%;
-  padding: max(20px, 5.735cqw) max(20px, 6.452cqw);
+  padding: max(16px, 5.018cqw) max(16px, 5.645cqw);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -852,7 +852,6 @@ h3 {
 .slide__idea {
   flex-shrink: 0;
   margin: 0;
-  max-width: 76cqw;
   font-size: max(13px, 1.62cqw);
   line-height: 1.45;
   color: var(--text-body);
