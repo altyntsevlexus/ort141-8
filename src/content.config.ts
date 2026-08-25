@@ -21,15 +21,6 @@ const courses = defineCollection({
   }),
 });
 
-/** A file a student can open or print, offered alongside a Тема's own Kind. */
-const attachment = z.object({
-  label: z.string(),
-  /** Filename within public/pdf/. */
-  file: z.string(),
-  /** Short qualifier shown next to the label, e.g. "A5 · 1 сторінка". */
-  note: z.string().optional(),
-});
-
 const themes = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/themes' }),
   schema: z.object({
@@ -63,8 +54,6 @@ const themes = defineCollection({
         }),
       )
       .optional(),
-    /** Files offered alongside the Kind — handouts, checklists, references. */
-    attachments: z.array(attachment).optional(),
   }),
 });
 

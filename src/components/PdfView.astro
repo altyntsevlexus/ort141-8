@@ -1,6 +1,5 @@
 ---
 import { render } from 'astro:content';
-import Attachments from './Attachments.astro';
 import { mdxComponents } from './mdx-components';
 import type { Course, Theme } from '../lib/nav';
 
@@ -11,7 +10,6 @@ interface Props {
 }
 const { course, theme, number } = Astro.props;
 const pdf = theme.data.pdf;
-const attachments = theme.data.attachments ?? [];
 const hasSupport = (theme.body ?? '').trim().length > 0;
 const { Content } = await render(theme);
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -61,11 +59,10 @@ const href = pdf ? `${base}/pdf/${pdf.file}` : null;
   }
 
   {hasSupport && (
-    <section class="support">
+    <section class="support prose">
       <Content components={mdxComponents} />
     </section>
   )}
-  <Attachments attachments={attachments} />
 
   <slot />
 </main>
