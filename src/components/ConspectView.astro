@@ -1,6 +1,5 @@
 ---
 import { render } from 'astro:content';
-import Attachments from './Attachments.astro';
 import { mdxComponents } from './mdx-components';
 import type { Course, Theme } from '../lib/nav';
 
@@ -12,7 +11,6 @@ interface Props {
 const { course, theme, number } = Astro.props;
 const { Content } = await render(theme);
 const { outline = [], duration, lead } = theme.data;
-const attachments = theme.data.attachments ?? [];
 ---
 <main class="shell lesson">
   {
@@ -51,8 +49,7 @@ const attachments = theme.data.attachments ?? [];
     <h1>{theme.data.title}</h1>
     {lead && <p class="article__lead">{lead}</p>}
     <Content components={mdxComponents} />
-    <Attachments attachments={attachments} />
-    <slot />
+      <slot />
   </article>
 </main>
 

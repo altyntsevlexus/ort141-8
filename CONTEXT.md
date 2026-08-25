@@ -65,20 +65,15 @@ Kind is **not** part of the URL. All three are renderings of the same address, s
 
 ## Supporting material
 
-What a Тема carries **in addition to** its Kind. A real lesson has one primary artifact
-plus things around it, so the Kind is what the Тема *is*, and supporting material is
-what comes with it.
+Authored text a Тема carries **in addition to** its Kind, shown below the viewer: a
+glossary, a пам’ятка, homework, what to know after the lesson. The Kind is what the
+Тема *is*; supporting material is what comes with it.
 
-Two forms:
+Available to every Kind, not just Конспект — a Презентація or a PDF can carry prose
+under it.
 
-- **Prose** — authored text shown below the viewer: a glossary, a пам’ятка, homework,
-  what to know after the lesson. Available to every Kind, not just Конспект.
-- **Attachment** — a file a student can open or print, listed under «Матеріали до
-  теми». Each has a label, a file, and an optional note describing what it is.
-
-Supporting material is **not** a second Kind. A Презентація with a handout attached is
-still one Тема of Kind Презентація; the handout does not get its own number on the
-timeline and does not have its own address.
+Supporting material is **not** a second Kind, and it is not separately addressable: it
+lives at the Тема's own URL and gets no number on the timeline.
 
 ## Пара
 
