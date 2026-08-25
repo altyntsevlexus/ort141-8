@@ -1,0 +1,117 @@
+---
+/**
+ * Slide 10 — three real cases that reached Ukraine.
+ *
+ * Built in CSS rather than SVG, for the same reason DomainAnatomy is: the pills
+ * have to fit their text, and only the browser knows how wide the text is.
+ * Was a table whose second column held a full sentence each — the slide read
+ * as a paragraph. Here the year, the way in, and the damage are three separate
+ * short things, so the teacher can talk to any of them.
+ */
+const CASES = [
+  {
+    year: '2017',
+    name: 'NotPetya',
+    how: 'через оновлення легальної програми',
+    hit: 'банки та аеропорт',
+  },
+  {
+    year: '2017',
+    name: 'WannaCry',
+    how: 'вимагач, що ліз мережею сам',
+    hit: 'понад 150 країн',
+  },
+  {
+    year: '2023',
+    name: '«Київстар»',
+    how: 'атака на самого оператора',
+    hit: 'мільйони без зв’язку',
+  },
+];
+---
+<div class="ct">
+  <div class="ct__line"></div>
+  {CASES.map(({ year, name, how, hit }, i) => (
+    /* Every part of a case names its own column. Left to auto-placement, the
+       full-width axis line above counts as an occupied cell and pushes the rest
+       of the case one column to the right. */
+    <>
+      <span class="ct__year" style={`grid-column: ${i + 1}`}>{year}</span>
+      <span class="ct__dot" style={`grid-column: ${i + 1}`}></span>
+      <strong class="ct__name" style={`grid-column: ${i + 1}`}>{name}</strong>
+      <span class="ct__how" style={`grid-column: ${i + 1}`}>{how}</span>
+      <span class="ct__hit" style={`grid-column: ${i + 1}`}>{hit}</span>
+    </>
+  ))}
+</div>
+
+<style>
+  /* Five rows shared by all three columns, so years, dots, names, causes and
+     damage each line up across the slide. */
+  .ct {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto auto auto auto;
+    align-content: center;
+    column-gap: max(16px, 2.5cqw);
+    row-gap: max(6px, 0.8cqw);
+    width: 100%;
+  }
+
+  /* Spans every column in the dot row; the dots sit on top of it. */
+  .ct__line {
+    grid-row: 2;
+    grid-column: 1 / 4;
+    align-self: center;
+    height: 2px;
+    background: currentColor;
+    opacity: 0.18;
+  }
+
+  .ct__year {
+    grid-row: 1;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: max(12px, 1.5cqw);
+    letter-spacing: 0.04em;
+    opacity: 0.55;
+    padding-bottom: max(6px, 0.8cqw);
+  }
+  .ct__dot {
+    grid-row: 2;
+    justify-self: center;
+    align-self: center;
+    width: max(11px, 1.35cqw);
+    height: max(11px, 1.35cqw);
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  .ct__name {
+    grid-row: 3;
+    text-align: center;
+    font-size: max(17px, 2.2cqw);
+    font-weight: 600;
+    padding-top: max(10px, 1.4cqw);
+  }
+  .ct__how {
+    grid-row: 4;
+    text-align: center;
+    font-size: max(13px, 1.5cqw);
+    line-height: 1.35;
+    opacity: 0.62;
+    padding-bottom: max(10px, 1.4cqw);
+  }
+  /* The damage, as a pill — the one thing to remember per case. */
+  .ct__hit {
+    grid-row: 5;
+    justify-self: center;
+    align-self: start;
+    padding: max(6px, 0.8cqw) max(12px, 1.6cqw);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: max(13px, 1.6cqw);
+    font-weight: 600;
+    text-align: center;
+  }
+</style>

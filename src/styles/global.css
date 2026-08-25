@@ -707,6 +707,11 @@ h3 {
 .slide {
   container-type: inline-size;
   aspect-ratio: 16 / 9;
+  /* aspect-ratio yields to content unless min-height is pinned: without this the
+     slide grows past 16:9 to fit the diagram's intrinsic height and spills off
+     the top of the screen. The visual shrinks instead. */
+  min-height: 0;
+  overflow: hidden;
   display: none;
 }
 .slide.is-active {
@@ -734,25 +739,128 @@ h3 {
   max-width: 69.89cqw;
   text-wrap: pretty;
 }
-.slide__bullets {
-  display: flex;
-  flex-direction: column;
-  gap: max(8px, 1.075cqw);
-  max-width: 64.52cqw;
+/* A slide is head + visual + anchors. The visual takes all the room left over,
+   so it is the thing that grows on a projector — not the text. */
+.slide__inner {
+  justify-content: flex-start;
 }
-.slide__bullet {
+.slide__head {
+  flex-shrink: 0;
+}
+.slide-visual {
+  flex: 1;
+  min-height: 0;
   display: flex;
-  gap: max(10px, 1.254cqw);
-  align-items: flex-start;
-  font-size: max(15px, 1.882cqw);
-  line-height: 1.5;
+  align-items: center;
+  justify-content: center;
+}
+.slide-visual svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
   color: var(--text-body);
+  font-family: var(--sans);
 }
-.slide__bullet span[data-dot] {
+.slide-visual--image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.slide-visual--code pre {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: max(14px, 2.1cqw);
+  line-height: 1.7;
+  color: var(--text);
+}
+
+/* A table is a visual when the table is the point. */
+.slide-visual--table {
+  align-items: center;
+  overflow: hidden;
+}
+.slide-visual--table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: max(13px, 1.72cqw);
+}
+.slide-visual--table th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: max(10px, 1.1cqw);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0.6;
+  padding: 0 max(10px, 1.2cqw) max(8px, 0.9cqw);
+}
+.slide-visual--table td {
+  padding: max(8px, 1.1cqw) max(10px, 1.2cqw);
+  border-top: 1px solid rgba(16, 24, 40, 0.12);
+  color: var(--text-body);
+  vertical-align: top;
+}
+.slide-visual--table td:first-child {
+  font-weight: 500;
+  color: var(--text);
+}
+/* The reveal exercise is about reading an address, so the addresses are set in
+   the same monospace the domain-anatomy slide taught them in. */
+.slide-visual--table table.is-reveal td:first-child {
+  font-family: var(--mono);
+}
+
+/* Exercise tables: the answer is asked before it is shown. The covered cell
+   carries a «?» so the class can see there is an answer waiting behind it —
+   a flat grey block alone read as an empty column. */
+.slide-visual--table td.is-hidden {
+  position: relative;
+  color: transparent;
+  background: rgba(16, 24, 40, 0.06);
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.slide-visual--table td.is-hidden::after {
+  content: '?';
+  position: absolute;
+  left: max(10px, 1.2cqw);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: max(13px, 1.72cqw);
+  color: rgba(16, 24, 40, 0.34);
+}
+.slide-visual--table td.is-hidden.is-shown {
+  color: var(--text-body);
+  background: transparent;
+  cursor: default;
+}
+.slide-visual--table td.is-hidden.is-shown::after {
+  content: none;
+}
+
+.slide__anchors {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: max(10px, 1.6cqw) max(14px, 2.2cqw);
+  align-items: center;
+}
+.slide__anchor {
+  display: inline-flex;
+  align-items: center;
+  gap: max(7px, 0.85cqw);
+  font-size: max(14px, 1.72cqw);
+  line-height: 1.4;
+  color: var(--text-body);
+  font-weight: 500;
+}
+.slide__anchor span[data-dot] {
   width: max(5px, 0.627cqw);
   height: max(5px, 0.627cqw);
   border-radius: 999px;
-  margin-top: max(7px, 0.986cqw);
   flex-shrink: 0;
 }
 .deck__bar {
@@ -833,10 +941,16 @@ body.is-immersive-lock {
 .deck-full {
   position: relative;
 }
+/* The floating bar overlays the slide, so anchors need room to clear it. */
+.deck-full .slide__inner {
+  padding-bottom: max(56px, 6cqw);
+}
 .deck-full .slide.is-active {
-  /* Letterbox: fit 16:9 inside the screen whichever way it is constrained.
-     The bar overlays rather than stacks, so the slide gets the whole screen. */
-  width: min(100%, calc(100dvh * 16 / 9));
+  /* Largest 16:9 box that fits the screen, with BOTH axes stated explicitly —
+     leaving height to aspect-ratio lets content win and overflow the viewport. */
+  width: min(100vw, calc(100dvh * 16 / 9));
+  height: min(100dvh, calc(100vw * 9 / 16));
+  aspect-ratio: auto;
   margin: 0 auto;
   cursor: pointer;
 }
@@ -892,6 +1006,27 @@ body.is-immersive-lock {
 .support > :first-child,
 .support > .prose > :first-child {
   margin-top: 0;
+}
+
+/* --- Sources ---------------------------------------------------------- */
+
+.sources {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.sources__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 14.5px;
+  color: var(--text-body);
+}
+.sources__note {
+  color: var(--muted-2);
 }
 
 /* --- MDX component library ------------------------------------------- */

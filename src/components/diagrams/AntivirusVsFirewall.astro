@@ -1,0 +1,64 @@
+---
+/** Slide 19 — antivirus is about files, firewall is about traffic. */
+import { TYPE, VB, WARN } from './_shared';
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Антивірус перевіряє файли, брандмауер фільтрує мережевий трафік">
+  <!-- Left: files being scanned. -->
+  <g>
+    <text x="40" y="46" font-size={TYPE.label} font-weight="600" fill="currentColor">Антивірус</text>
+    <text x="40" y="82" font-size={TYPE.sub} fill="var(--accent)">файли й програми</text>
+    {[0, 1, 2].map((i) => (
+      <g transform={`translate(${52 + i * 108} 132)`}>
+        <path d="M0 0 h56 l18 18 v82 H0 Z" fill="currentColor" opacity="0.07" />
+        <path d="M0 0 h56 l18 18 v82 H0 Z" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M56 0 v18 h18" fill="none" stroke="currentColor" stroke-width="2" />
+      </g>
+    ))}
+    <!-- Scan sweep across the files. -->
+    <path d="M40 296 H392" stroke="var(--accent)" stroke-width="3" stroke-dasharray="12 8" />
+    <text x="40" y="342" font-size={TYPE.note} fill="currentColor" opacity="0.72">
+      перевіряє те, що вже на диску
+    </text>
+  </g>
+
+  <line x1="470" y1="30" x2="470" y2="390" stroke="currentColor" stroke-width="1.5" opacity="0.2" />
+
+  <!-- Right: traffic being filtered at a wall. -->
+  <g>
+    <text x="540" y="46" font-size={TYPE.label} font-weight="600" fill="currentColor">Брандмауер</text>
+    <text x="540" y="82" font-size={TYPE.sub} fill="var(--accent)">мережеві з’єднання</text>
+
+    <rect x="760" y="112" width="26" height="200" rx="6" fill="var(--accent)" opacity="0.85" />
+
+    {[
+      { y: 150, pass: true },
+      { y: 212, pass: false },
+      { y: 274, pass: true },
+    ].map(({ y, pass }) => (
+      <g>
+        <path d={`M540 ${y} H${pass ? 900 : 742}`} stroke="currentColor" stroke-width="2.5"
+              opacity={pass ? 0.75 : 0.4} marker-end={pass ? 'url(#af-tip)' : undefined} />
+        {!pass && (
+          <g stroke={WARN} stroke-width="3">
+            <path d="M726 -12 l24 24" transform={`translate(0 ${y})`} />
+            <path d="M750 -12 l-24 24" transform={`translate(0 ${y})`} />
+          </g>
+        )}
+      </g>
+    ))}
+    <text x="540" y="342" font-size={TYPE.note} fill="currentColor" opacity="0.72">
+      вирішує, що впустити й випустити
+    </text>
+  </g>
+
+  <text x="40" y="404" font-size={TYPE.note} fill="currentColor" opacity="0.6">
+    у Windows обидва вже є — питання лише в тому, чи ввімкнені
+  </text>
+
+  <defs>
+    <marker id="af-tip" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0 L12 6 L0 12 z" fill="currentColor" opacity="0.75" />
+    </marker>
+  </defs>
+</svg>

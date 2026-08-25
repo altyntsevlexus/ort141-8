@@ -1,0 +1,58 @@
+---
+import { diagrams } from './diagrams';
+
+interface Props {
+  visual:
+    | { type: 'diagram'; name: string }
+    | { type: 'table'; head: string[]; rows: string[][]; reveal?: boolean }
+    | { type: 'code'; text: string }
+    | { type: 'image'; src: string; alt: string };
+}
+const { visual } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// An unknown diagram name renders nothing rather than breaking the whole deck.
+const Diagram = visual.type === 'diagram' ? diagrams[visual.name] : null;
+---
+{
+  visual.type === 'diagram' && Diagram && (
+    <div class="slide-visual slide-visual--diagram">
+      <Diagram />
+    </div>
+  )
+}
+{
+  visual.type === 'table' && (
+    <div class="slide-visual slide-visual--table">
+      <table class={visual.reveal ? 'is-reveal' : undefined}>
+        <thead>
+          <tr>{visual.head.map((h) => <th>{h}</th>)}</tr>
+        </thead>
+        <tbody>
+          {visual.rows.map((row) => (
+            <tr>
+              {row.map((cell, i) => (
+                /* With reveal on, every column after the first stays blurred until
+                   clicked — the exercise is asked before the answer is shown. */
+                <td class={visual.reveal && i > 0 ? 'is-hidden' : undefined}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+{
+  visual.type === 'code' && (
+    <div class="slide-visual slide-visual--code">
+      <pre>{visual.text}</pre>
+    </div>
+  )
+}
+{
+  visual.type === 'image' && (
+    <div class="slide-visual slide-visual--image">
+      <img src={`${base}/${visual.src.replace(/^\//, '')}`} alt={visual.alt} />
+    </div>
+  )
+}

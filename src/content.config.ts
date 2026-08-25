@@ -21,6 +21,34 @@ const courses = defineCollection({
   }),
 });
 
+/**
+ * A slide is a visual with a headline. Text on it is at most three short anchors —
+ * the lesson's content is what the teacher says, not what the slide reads out.
+ * See CONTEXT.md on Презентація.
+ */
+const visual = z.discriminatedUnion('type', [
+  /** A named SVG diagram from src/components/diagrams. */
+  z.object({ type: z.literal('diagram'), name: z.string() }),
+  /** Used when the table IS the point: a comparison or a classification. */
+  z.object({
+    type: z.literal('table'),
+    head: z.array(z.string()),
+    rows: z.array(z.array(z.string())),
+    /** Hides the answer column until clicked — for class-facing exercises. */
+    reveal: z.boolean().optional(),
+  }),
+  z.object({ type: z.literal('code'), text: z.string() }),
+  z.object({ type: z.literal('image'), src: z.string(), alt: z.string() }),
+]);
+
+const slide = z.object({
+  kicker: z.string(),
+  title: z.string(),
+  visual: visual.optional(),
+  /** Hard cap of three. A limit that is not enforced is a limit that erodes. */
+  anchors: z.array(z.string()).max(3).optional(),
+});
+
 const themes = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/themes' }),
   schema: z.object({
@@ -45,12 +73,14 @@ const themes = defineCollection({
       .object({ file: z.string(), pages: z.number() })
       .optional(),
     /** Презентація only. */
-    slides: z
+    slides: z.array(slide).optional(),
+    /** Where the material comes from — textbook sections, decks, external links. */
+    sources: z
       .array(
         z.object({
-          kicker: z.string(),
-          title: z.string(),
-          bullets: z.array(z.string()),
+          label: z.string(),
+          note: z.string().optional(),
+          href: z.string().optional(),
         }),
       )
       .optional(),

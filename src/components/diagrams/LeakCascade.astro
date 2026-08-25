@@ -1,0 +1,59 @@
+---
+/** Slide 5 — one forgotten site opens everything, because the password repeats. */
+import { TYPE, VB } from './_shared';
+const OUT = [
+  { label: 'Instagram', y: 96 },
+  { label: 'Steam', y: 210 },
+  { label: 'банк', y: 324 },
+];
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Витік бази форуму відкриває пошту, а через пошту — усі акаунти">
+  <!-- The forgotten site: deliberately faded, it is the part nobody remembers. -->
+  <g opacity="0.55">
+    <rect x="8" y="168" width="212" height="84" rx="16"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="7 6" />
+    <text x="114" y="200" text-anchor="middle" font-size={TYPE.label} fill="currentColor">форум</text>
+    <text x="114" y="230" text-anchor="middle" font-size={TYPE.sub} fill="currentColor" opacity="0.7">
+      6 клас, забутий
+    </text>
+  </g>
+
+  <path d="M228 210 H346" stroke="currentColor" stroke-width="2.5" marker-end="url(#lc-tip)" />
+  <text x="287" y="178" text-anchor="middle" font-size={TYPE.note} fill="currentColor" opacity="0.75">
+    той самий
+  </text>
+  <text x="287" y="202" text-anchor="middle" font-size={TYPE.note} fill="currentColor" opacity="0.75">
+    пароль
+  </text>
+
+  <!-- Пошта: the master key, so it carries the accent and the weight. -->
+  <rect x="360" y="150" width="240" height="120" rx="20" fill="var(--accent)" />
+  <text x="480" y="196" text-anchor="middle" font-size={TYPE.label + 4} fill="#fff" font-weight="600">
+    пошта
+  </text>
+  <text x="480" y="232" text-anchor="middle" font-size={TYPE.sub} fill="#fff" opacity="0.85">
+    майстер-ключ
+  </text>
+
+  {OUT.map(({ label, y }) => (
+    <>
+      <path d={`M608 210 C 664 210, 664 ${y + 34}, 720 ${y + 34}`}
+            fill="none" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#lc-tip-a)" />
+      <rect x="728" y={y} width="264" height="68" rx="14"
+            fill="none" stroke="var(--accent)" stroke-width="2" />
+      <text x="860" y={y + 44} text-anchor="middle" font-size={TYPE.label} fill="currentColor">
+        {label}
+      </text>
+    </>
+  ))}
+
+  <defs>
+    <marker id="lc-tip" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0 L12 6 L0 12 z" fill="currentColor" />
+    </marker>
+    <marker id="lc-tip-a" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0 L12 6 L0 12 z" fill="var(--accent)" />
+    </marker>
+  </defs>
+</svg>

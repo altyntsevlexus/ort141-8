@@ -60,8 +60,33 @@ Kind is **not** part of the URL. All three are renderings of the same address, s
   interactive pieces, callouts, step lists). Carries a «Зміст теми» outline of its own
   sections. The flexible Kind; anything that isn't a file or a deck is a Конспект.
 - **PDF** — a single document, read in place. Reference sheets and handouts.
-- **Презентація** — an ordered sequence of slides, stepped through one at a time.
-  Each slide is a kicker, a title, and a short list of bullets. Presentable full-screen.
+- **Презентація** — an ordered sequence of slides, stepped through one at a time,
+  presentable full-screen.
+
+  A Презентація is **not a document paginated into 16:9**. The content of the lesson is
+  what the teacher says; the slide exists to *support* that — so a slide is primarily a
+  **visual**, carrying a headline and at most a couple of short text anchors the class
+  can glance at. Full-sentence bullet lists are the failure mode: they make the room
+  read instead of listen, and they duplicate the teacher instead of helping them.
+
+  A table counts as a visual when the table *is* the point (a comparison, a
+  classification). Teacher narration, and the answers to class-facing questions, are
+  not part of a Презентація — they live in the planning material outside this
+  repository.
+
+  A slide therefore has four named parts, and only four:
+
+  - **Kicker** — where in the lesson we are («Шкідливе ПЗ · класифікація 2»).
+  - **Title** — the one claim the slide makes, as a sentence.
+  - **Visual** — the diagram, table, code fragment or image that carries it. Optional:
+    some slides are a title and nothing else, and that is a legitimate slide.
+  - **Anchor** — a short phrase the class can glance at, at most **three** per slide.
+    An anchor is not a bullet: it is a handful of words, not a sentence, and it never
+    restates the title.
+
+  **Джерела** are where a Тема's material came from — a textbook section, an earlier
+  deck, an external page. They belong to the Тема, not to any one slide, and are shown
+  under the viewer.
 
 ## Supporting material
 
