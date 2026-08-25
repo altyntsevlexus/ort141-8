@@ -31,27 +31,49 @@ const { title, desc, glyph, color, tint } = course.data;
 
     <h2 class="section-heading">Теми курсу</h2>
 
-    <div class="timeline">
-      {
-        themes.map((theme, i) => (
-          <div class="timeline__row">
-            <div class="timeline__rail">
-              <div class="timeline__num" style={`color: ${color}`}>{i + 1}</div>
-              <div class="timeline__line"></div>
-            </div>
-            <a class="theme-card" href={themeUrl(course.id, themeSlug(theme))}>
-              <div style="flex: 1">
-                <div class="theme-card__title">{theme.data.title}</div>
-                <div class="theme-card__meta">{theme.data.meta}</div>
+    {
+      themes.length === 0 ? (
+        <p class="empty-note">
+          Матеріали цього блоку ще готуються. Структуру блоку описано в плані семестру.
+        </p>
+      ) : (
+        <div class="timeline">
+          {themes.map((theme, i) => {
+            const pending = theme.data.pending === true;
+            return (
+              <div class="timeline__row">
+                <div class="timeline__rail">
+                  <div
+                    class="timeline__num"
+                    style={`color: ${pending ? 'var(--muted-4)' : color}`}
+                  >
+                    {i + 1}
+                  </div>
+                  <div class="timeline__line" />
+                </div>
+                <a
+                  class={pending ? 'theme-card is-pending' : 'theme-card'}
+                  href={themeUrl(course.id, themeSlug(theme))}
+                >
+                  <div style="flex: 1">
+                    <div class="theme-card__title">{theme.data.title}</div>
+                    <div class="theme-card__meta">{theme.data.meta}</div>
+                  </div>
+                  {!pending && (
+                    <div
+                      class="theme-card__kind"
+                      style={`background: ${tint}; color: ${color}`}
+                    >
+                      {theme.data.kind}
+                    </div>
+                  )}
+                  <div class="theme-card__arrow" aria-hidden="true">→</div>
+                </a>
               </div>
-              <div class="theme-card__kind" style={`background: ${tint}; color: ${color}`}>
-                {theme.data.kind}
-              </div>
-              <div class="theme-card__arrow" aria-hidden="true">→</div>
-            </a>
-          </div>
-        ))
-      }
-    </div>
+            );
+          })}
+        </div>
+      )
+    }
   </main>
 </Base>
