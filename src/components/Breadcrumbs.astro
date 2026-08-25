@@ -1,0 +1,29 @@
+---
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+---
+
+<div class="crumbs">
+  <nav class="shell crumbs__inner" aria-label="Навігація">
+    {
+      crumbs.map((crumb, i) => (
+        <>
+          {i > 0 && <span class="crumbs__sep" aria-hidden="true">/</span>}
+          {crumb.href ? (
+            <a href={crumb.href}>{crumb.label}</a>
+          ) : (
+            <span class="crumbs__current" aria-current="page">{crumb.label}</span>
+          )}
+        </>
+      ))
+    }
+  </nav>
+</div>

@@ -1,0 +1,10 @@
+---
+interface Props {
+  label?: string;
+}
+const { label = 'Покрокова інструкція' } = Astro.props;
+---
+<div class="steps">
+  <div class="box__label">{label}</div>
+  <ol class="steps__list"><slot /></ol>
+</div>

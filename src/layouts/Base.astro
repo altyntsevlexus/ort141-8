@@ -1,0 +1,32 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import type { Crumb } from '../components/Breadcrumbs.astro';
+
+interface Props {
+  title: string;
+  crumbs: Crumb[];
+}
+
+const { title, crumbs } = Astro.props;
+const FONTS =
+  'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap';
+---
+
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · 8-й клас Інформатика ОРТ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href={FONTS} rel="stylesheet" />
+  </head>
+  <body>
+    <SiteHeader />
+    <Breadcrumbs crumbs={crumbs} />
+    <slot />
+  </body>
+</html>

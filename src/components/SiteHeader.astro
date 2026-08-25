@@ -1,0 +1,17 @@
+---
+// Nav carries Курси only. «Матеріали» and «Розклад» from the prototype are
+// removed rather than shown inert — they have no destination.
+const home = import.meta.env.BASE_URL;
+---
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href={home}>
+      <div class="brand__mark">O</div>
+      <div class="brand__word">ORT 141</div>
+    </a>
+    <nav class="site-nav">
+      <a href={home}>Курси</a>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,22 @@
+---
+interface Props {
+  /** Path within public/, e.g. "img/fill-handle.png". Omit while pending. */
+  src?: string;
+  alt?: string;
+  caption?: string;
+  /** Intended pixel size, shown while the image is still missing. */
+  size?: string;
+}
+const { src, alt = '', caption, size } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+{
+  src ? (
+    <img src={`${base}/${src.replace(/^\//, '')}`} alt={alt} />
+  ) : (
+    <div class="shot">
+      <div class="shot__tag">скріншот: {caption ?? 'ще не додано'}</div>
+      {size && <div class="shot__dim">{size}</div>}
+    </div>
+  )
+}

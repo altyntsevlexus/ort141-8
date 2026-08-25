@@ -1,0 +1,73 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../../layouts/Base.astro';
+import ConspectView from '../../../components/ConspectView.astro';
+import PdfView from '../../../components/PdfView.astro';
+import SlidesView from '../../../components/SlidesView.astro';
+import ThemeStepper from '../../../components/ThemeStepper.astro';
+import {
+  allCourses,
+  courseUrl,
+  homeUrl,
+  stepper,
+  themeSlug,
+  themesOf,
+} from '../../../lib/nav';
+
+export const getStaticPaths = (async () => {
+  const courses = await allCourses();
+  const paths = await Promise.all(
+    courses.map(async (course) => {
+      const themes = await themesOf(course.id);
+      return themes.map((theme) => ({
+        params: { course: course.id, theme: themeSlug(theme) },
+        props: { course, theme },
+      }));
+    }),
+  );
+  return paths.flat();
+}) satisfies GetStaticPaths;
+
+const { course, theme } = Astro.props;
+
+// Kind is fixed per theme and deliberately absent from the URL — all three are
+// renderings of one address. See CONTEXT.md.
+const step = await stepper(course, theme);
+const number = (step?.index ?? 0) + 1;
+
+const crumbs = [
+  { label: 'Курси', href: homeUrl },
+  { label: course.data.title, href: courseUrl(course.id) },
+  { label: theme.data.title },
+];
+---
+
+<Base title={theme.data.title} crumbs={crumbs}>
+  {
+    theme.data.kind === 'Конспект' && (
+      <ConspectView course={course} theme={theme} number={number}>
+        {step && (
+          <ThemeStepper courseId={course.id} prev={step.prev} next={step.next} />
+        )}
+      </ConspectView>
+    )
+  }
+  {
+    theme.data.kind === 'PDF' && (
+      <PdfView course={course} theme={theme} number={number}>
+        {step && (
+          <ThemeStepper courseId={course.id} prev={step.prev} next={step.next} bare />
+        )}
+      </PdfView>
+    )
+  }
+  {
+    theme.data.kind === 'Презентація' && (
+      <SlidesView course={course} theme={theme} number={number}>
+        {step && (
+          <ThemeStepper courseId={course.id} prev={step.prev} next={step.next} bare />
+        )}
+      </SlidesView>
+    )
+  }
+</Base>

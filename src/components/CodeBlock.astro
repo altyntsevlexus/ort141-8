@@ -1,0 +1,11 @@
+---
+interface Props {
+  code: string;
+  label?: string;
+}
+const { code, label = 'Приклад' } = Astro.props;
+---
+<div class="codeblock">
+  <div class="codeblock__label">{label}</div>
+  <pre>{code}</pre>
+</div>

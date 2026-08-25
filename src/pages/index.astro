@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import { allCourses, courseUrl, themesOf } from '../lib/nav';
+
+const courses = await allCourses();
+const cards = await Promise.all(
+  courses.map(async (course) => ({
+    course,
+    themeCount: (await themesOf(course.id)).length,
+  })),
+);
+---
+
+<Base title="Курси" crumbs={[{ label: 'Курси' }]}>
+  <main class="shell page">
+    <h1 class="page__title">8-й клас Інформатика ОРТ</h1>
+    <p class="page__lede">
+      Оберіть курс, щоб побачити список тем. Матеріали доступні у будь-який час.
+    </p>
+
+    <div class="course-grid" data-count={cards.length}>
+      {
+        cards.map(({ course, themeCount }) => (
+          <a class="course-card" href={courseUrl(course.id)}>
+            <div class="course-card__banner" style={`background: ${course.data.tint}`}>
+              <div class="course-card__glyph" style={`background: ${course.data.color}`}>
+                {course.data.glyph}
+              </div>
+              <div class="course-card__level" style={`color: ${course.data.color}`}>
+                {course.data.level}
+              </div>
+            </div>
+            <div class="course-card__body">
+              <h2 class="course-card__title">{course.data.title}</h2>
+              <p class="course-card__desc">{course.data.desc}</p>
+              <div class="course-card__meta">
+                <span>{themeCount} тем</span>
+                <i aria-hidden="true">•</i>
+                <span>{course.data.hours}</span>
+              </div>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </main>
+</Base>

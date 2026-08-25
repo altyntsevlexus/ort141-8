@@ -1,0 +1,58 @@
+---
+import type { Course, Theme } from '../lib/nav';
+
+interface Props {
+  course: Course;
+  theme: Theme;
+  number: number;
+}
+const { course, theme, number } = Astro.props;
+const pdf = theme.data.pdf;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const href = pdf ? `${base}/pdf/${pdf.file}` : null;
+---
+<main class="shell page" style="padding-top: 36px; padding-bottom: 70px">
+  <div class="pdf-head">
+    <div>
+      <div class="theme-kicker" style={`color: ${course.data.color}`}>
+        Тема {number} · PDF
+      </div>
+      <h1>{theme.data.title}</h1>
+    </div>
+    {
+      href && (
+        <div class="pdf-head__actions">
+          <a class="btn" href={href} download>Завантажити</a>
+          <a class="btn" href={href} target="_blank" rel="noopener">На весь екран</a>
+        </div>
+      )
+    }
+  </div>
+
+  {
+    href && pdf ? (
+      <>
+        {/* Desktop: read in place. */}
+        <div class="pdf-frame">
+          <div class="pdf-frame__bar">
+            <div>{pdf.file}</div>
+            <div class="spacer">{pdf.pages} сторінок</div>
+          </div>
+          <iframe src={href} title={theme.data.title} loading="lazy"></iframe>
+        </div>
+
+        {/* Phones: a nested scroll frame of A4 pages is unusable, so open natively. */}
+        <div class="pdf-mobile">
+          <p class="pdf-mobile__meta">{pdf.file} · {pdf.pages} сторінок</p>
+          <a class="btn btn--primary" href={href} target="_blank" rel="noopener">
+            Відкрити PDF
+          </a>
+        </div>
+      </>
+    ) : (
+      <p class="empty-note">Файл ще не завантажено.</p>
+    )
+  }
+
+  <slot />
+</main>

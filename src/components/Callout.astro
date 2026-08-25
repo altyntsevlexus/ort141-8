@@ -1,0 +1,13 @@
+---
+interface Props {
+  /** note → «Нотатка» (blue), warn → «Увага» (amber) */
+  kind?: 'note' | 'warn';
+  label?: string;
+}
+const { kind = 'note', label } = Astro.props;
+const text = label ?? (kind === 'warn' ? 'Увага' : 'Нотатка');
+---
+<div class={`callout callout--${kind}`}>
+  <div class="callout__label">{text}</div>
+  <div class="callout__body"><slot /></div>
+</div>
