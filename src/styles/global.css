@@ -845,27 +845,32 @@ h3 {
   content: none;
 }
 
-.slide__anchors {
+/* One sentence at the foot of the slide, saying what the visual means. This
+   replaced a row of bulleted anchors: three fragments read as a summary the
+   class could read instead of listening, and they stole the height the picture
+   needed. Nothing here is bulleted, and there is never more than one. */
+.slide__idea {
+  flex-shrink: 0;
+  margin: 0;
+  max-width: 76cqw;
+  font-size: max(13px, 1.62cqw);
+  line-height: 1.45;
+  color: var(--text-body);
+  opacity: 0.82;
+}
+
+/* Where to read more. Only on slides about real events. */
+.slide__links {
   flex-shrink: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: max(10px, 1.6cqw) max(14px, 2.2cqw);
-  align-items: center;
+  gap: max(8px, 1.1cqw) max(14px, 2cqw);
+  font-size: max(11px, 1.35cqw);
 }
-.slide__anchor {
-  display: inline-flex;
-  align-items: center;
-  gap: max(7px, 0.85cqw);
-  font-size: max(14px, 1.72cqw);
-  line-height: 1.4;
-  color: var(--text-body);
+.slide__links a {
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
   font-weight: 500;
-}
-.slide__anchor span[data-dot] {
-  width: max(5px, 0.627cqw);
-  height: max(5px, 0.627cqw);
-  border-radius: 999px;
-  flex-shrink: 0;
 }
 .deck__bar {
   height: 62px;
