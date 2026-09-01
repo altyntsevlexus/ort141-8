@@ -1,0 +1,73 @@
+---
+/**
+ * Слайд 2 — комп'ютер має лише два стани, і саме тому працює на двійковій.
+ *
+ * Малюнок навмисно ставить 1 і 0 найбільшими глифами на полотні: провід і
+ * лампа — це пояснення, а цифра — те, що має залишитися в пам'яті.
+ *
+ * Дві половини — дзеркальні, тому форма описана один раз і намальована двічі.
+ * Скопійована вручну друга половина з часом розійшлася б із першою.
+ *
+ * Кожна половина — дві дуги дроту (розрив угорі під лампу, розрив унизу під
+ * вимикач), сам вимикач і лампа. Замкнений вимикач — пряма перемичка,
+ * розімкнений — піднятий важіль.
+ *
+ * WARN тут не використано: розірване коло — це стан, а не поламка.
+ */
+import { TYPE, VB } from './_shared';
+
+/** Ліва половина живиться акцентом курсу, права — приглушеним currentColor. */
+const STATES = [
+  { ox: 60, on: true, digit: '1', label: 'струм є' },
+  { ox: 560, on: false, digit: '0', label: 'струму немає' },
+];
+
+/** Верх кола на y = 60, низ на y = 230; лампа сидить у розриві верхнього дроту. */
+const TOP = 60;
+const BOT = 230;
+const W = 380;
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Замкнене коло з увімкненою лампою позначає одиницю, розірване коло з вимкненою лампою — нуль">
+  {STATES.map(({ ox, on, digit, label }) => {
+    const mid = ox + W / 2;
+    const tone = on ? 'var(--accent)' : 'currentColor';
+    const dim = on ? 1 : 0.45;
+    return (
+      <g opacity={dim}>
+        <path d={`M ${mid - 34} ${TOP} H ${ox} V ${BOT} H ${ox + 90}`}
+              fill="none" stroke={tone} stroke-width="3.5" stroke-linecap="round" />
+        <path d={`M ${mid + 34} ${TOP} H ${ox + W} V ${BOT} H ${ox + W - 90}`}
+              fill="none" stroke={tone} stroke-width="3.5" stroke-linecap="round" />
+
+        <circle cx={ox + 90} cy={BOT} r="5" fill={tone} />
+        <circle cx={ox + W - 90} cy={BOT} r="5" fill={tone} />
+        <path d={on
+                  ? `M ${ox + 90} ${BOT} H ${ox + W - 90}`
+                  : `M ${ox + 90} ${BOT} L ${ox + W - 110} ${BOT - 52}`}
+              fill="none" stroke={tone} stroke-width="3.5" stroke-linecap="round" />
+
+        <circle cx={mid} cy={TOP} r="34" fill={on ? 'var(--accent)' : 'none'}
+                fill-opacity={on ? 0.22 : 0} stroke={tone} stroke-width="3.5" />
+        <path d={`M ${mid - 15} ${TOP + 9} L ${mid - 8} ${TOP - 4} L ${mid} ${TOP + 6}
+                   L ${mid + 8} ${TOP - 4} L ${mid + 15} ${TOP + 9}`}
+              fill="none" stroke={tone} stroke-width="2.5"
+              stroke-linejoin="round" stroke-linecap="round" />
+        {on && [0, 1, 2, 3].map((i) => {
+          const a = (-125 + i * 30) * (Math.PI / 180);
+          return <path d={`M ${mid + Math.cos(a) * 46} ${TOP + Math.sin(a) * 46}
+                           L ${mid + Math.cos(a) * 62} ${TOP + Math.sin(a) * 62}`}
+                       stroke="var(--accent)" stroke-width="3" stroke-linecap="round" />;
+        })}
+
+        <text x={mid} y="372" text-anchor="middle" font-size="120" font-weight="700"
+              font-family="var(--mono)" fill={tone}>{digit}</text>
+        <text x={mid} y="408" text-anchor="middle" font-size={TYPE.sub}
+              fill="currentColor" opacity="0.72">{label}</text>
+      </g>
+    );
+  })}
+
+  <line x1="500" y1="30" x2="500" y2="390" stroke="currentColor"
+        stroke-width="1.5" opacity="0.14" />
+</svg>

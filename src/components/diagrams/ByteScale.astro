@@ -1,0 +1,76 @@
+---
+/**
+ * Слайд 11 — шкала від біта до терабайта, з множником на кожному кроці.
+ *
+ * Уся суть малюнка — асиметрія першого кроку: біт → байт це × 8, а всі
+ * наступні — × 1024. Саме тут клас помиляється, тому × 8 намальовано
+ * акцентом і більшим кеглем, а чотири × 1024 — приглушено й дрібніше.
+ * Стовпчики ростуть лише щоб показати порядок, а не реальний масштаб:
+ * у справжніх пропорціях біт був би невидимий.
+ */
+import { TYPE, VB } from './_shared';
+
+const BASE = 310;
+const BAR_W = 100;
+const STEP = 170;
+const X0 = 25;
+
+const UNITS = [
+  { name: 'біт', sub: '0 або 1', h: 60 },
+  { name: 'байт', sub: '8 біт', h: 100 },
+  { name: 'КБ', sub: '', h: 140 },
+  { name: 'МБ', sub: '', h: 180 },
+  { name: 'ГБ', sub: '', h: 220 },
+  { name: 'ТБ', sub: '', h: 260 },
+];
+
+const x = (i: number) => X0 + i * STEP;
+const top = (i: number) => BASE - UNITS[i].h;
+
+/** Перший множник — інший, і показаний інакше. */
+const STEPS = UNITS.slice(1).map((_, i) => ({
+  from: i,
+  to: i + 1,
+  label: i === 0 ? '× 8' : '× 1024',
+  first: i === 0,
+}));
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Шкала одиниць обсягу: біт, байт, кілобайт, мегабайт, гігабайт, терабайт. Від біта до байта множник вісім, далі щоразу тисяча двадцять чотири">
+  <line x1="15" y1={BASE} x2="985" y2={BASE} stroke="currentColor"
+        stroke-width="1.5" opacity="0.18" />
+
+  {STEPS.map(({ from, to, label, first }) => (
+    <g>
+      <path d={`M ${x(from) + BAR_W} ${top(from)} L ${x(to)} ${top(to)}`}
+            fill="none" stroke={first ? 'var(--accent)' : 'currentColor'}
+            stroke-width={first ? 2.5 : 1.5}
+            stroke-dasharray={first ? undefined : '5 5'}
+            opacity={first ? 0.9 : 0.35} />
+      <text x={(x(from) + BAR_W + x(to)) / 2}
+            y={(top(from) + top(to)) / 2 - (first ? 20 : 14)}
+            text-anchor="middle"
+            font-size={first ? TYPE.label : TYPE.sub}
+            font-weight={first ? 700 : 400}
+            font-family="var(--mono)"
+            fill={first ? 'var(--accent)' : 'currentColor'}
+            opacity={first ? 1 : 0.55}>{label}</text>
+    </g>
+  ))}
+
+  {UNITS.map(({ name, sub }, i) => (
+    <g>
+      <rect x={x(i)} y={top(i)} width={BAR_W} height={UNITS[i].h} rx="8"
+            fill="var(--accent)" fill-opacity={0.1 + i * 0.05}
+            stroke="var(--accent)" stroke-width="2.5" />
+      <text x={x(i) + BAR_W / 2} y={BASE + 36} text-anchor="middle"
+            font-size={TYPE.label} font-weight="600"
+            fill="currentColor">{name}</text>
+      {sub && (
+        <text x={x(i) + BAR_W / 2} y={BASE + 66} text-anchor="middle"
+              font-size={TYPE.sub} fill="currentColor"
+              opacity="0.6">{sub}</text>
+      )}
+    </g>
+  ))}
+</svg>
