@@ -5,6 +5,7 @@ import BrowserDoors from './BrowserDoors.astro';
 import ByteScale from './ByteScale.astro';
 import CaseTimeline from './CaseTimeline.astro';
 import CurrentTwoStates from './CurrentTwoStates.astro';
+import DataToBits from './DataToBits.astro';
 import DdosFanin from './DdosFanin.astro';
 import DeepfakeSource from './DeepfakeSource.astro';
 import DomainAnatomy from './DomainAnatomy.astro';
@@ -43,6 +44,7 @@ export const diagrams: Record<string, any> = {
   'audit-checklist': AuditChecklist,
 
   // Урок 3 — двійкова система.
+  'data-to-bits': DataToBits,
   'current-two-states': CurrentTwoStates,
   'place-value-decimal': PlaceValueDecimal,
   'place-value-binary': PlaceValueBinary,
