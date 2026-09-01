@@ -22,8 +22,9 @@ const courses = defineCollection({
 });
 
 /**
- * A slide is a visual with a headline. Text on it is at most three short anchors —
- * the lesson's content is what the teacher says, not what the slide reads out.
+ * A slide is a visual with a headline. The lesson's content is what the teacher
+ * says, not what the slide reads out — so a slide carries a kicker, a title, an
+ * optional visual, and at most one sentence saying what the visual means.
  * See CONTEXT.md on Презентація.
  */
 const visual = z.discriminatedUnion('type', [
