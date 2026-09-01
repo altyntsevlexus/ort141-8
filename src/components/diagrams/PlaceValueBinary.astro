@@ -1,0 +1,130 @@
+---
+/**
+ * Слайд 7 — 131 у двійковій: та сама картинка, що на слайді 6, інші ваги.
+ *
+ * Паралель між двома слайдами і є всім змістом цієї пари: якщо малюнок
+ * однаковий, клас бачить, що змінилася тільки основа. Тому геометрія тут
+ * навмисно повторює PlaceValueDecimal, а не винаходить власну.
+ *
+ * Назв місць («сотні», «десятки») у двійковій немає, тому їхній рядок
+ * заміщено вагою розряду; степінь так само стоїть дрібним підписом.
+ *
+ * CSS grid дає ще один виграш: вісім вузьких колонок читаються на телефоні,
+ * тоді як дев'ятиколонкова таблиця там доводилася прокручувати вбік.
+ */
+
+/** З підручника, с. 7: 131₁₀ = 10000011₂. */
+const DIGITS = [
+  { d: '1', weight: '128', power: '2⁷', product: '128' },
+  { d: '0', weight: '64', power: '2⁶', product: '0' },
+  { d: '0', weight: '32', power: '2⁵', product: '0' },
+  { d: '0', weight: '16', power: '2⁴', product: '0' },
+  { d: '0', weight: '8', power: '2³', product: '0' },
+  { d: '0', weight: '4', power: '2²', product: '0' },
+  { d: '1', weight: '2', power: '2¹', product: '2' },
+  { d: '1', weight: '1', power: '2⁰', product: '1' },
+];
+const TOTAL = '131';
+---
+<div class="pvb">
+  {DIGITS.map(({ d }, i) => (
+    <span class={d === '1' ? 'pvb__digit is-on' : 'pvb__digit'}
+          style={`grid-column: ${i + 1}`}>{d}</span>
+  ))}
+  {DIGITS.map(({ weight, power }, i) => (
+    <span class="pvb__weight" style={`grid-column: ${i + 1}`}>
+      {weight}
+      <small>{power}</small>
+    </span>
+  ))}
+
+  <span class="pvb__rule" style={`grid-column: 1 / ${DIGITS.length + 2}`}></span>
+
+  {DIGITS.map(({ d, product }, i) => (
+    <span class={d === '1' ? 'pvb__product is-on' : 'pvb__product'}
+          style={`grid-column: ${i + 1}`}>
+      {i > 0 && <em>+</em>}{product}
+    </span>
+  ))}
+  <span class="pvb__total" style={`grid-column: ${DIGITS.length + 1}`}>= {TOTAL}</span>
+</div>
+
+<style>
+  /* Вісім колонок цифр плюс колонка результату. Чотири рядки: цифра · вага ·
+     риска · добуток — на один менше, ніж у десятковій, бо назв місць немає. */
+  .pvb {
+    display: grid;
+    grid-template-columns: repeat(8, auto) auto;
+    justify-content: center;
+    align-content: center;
+    column-gap: max(11px, 2cqw);
+    font-family: var(--mono);
+  }
+
+  .pvb__digit {
+    grid-row: 1;
+    text-align: center;
+    font-size: max(20px, 4.2cqw);
+    font-weight: 700;
+    line-height: 1.1;
+    padding-bottom: max(4px, 0.6cqw);
+    border-bottom: 2px solid currentColor;
+    border-color: color-mix(in srgb, currentColor 25%, transparent);
+    opacity: 0.35;
+  }
+  /* Розряди з одиницею — єдині, що щось додають до суми. */
+  .pvb__digit.is-on {
+    color: var(--accent);
+    border-color: var(--accent);
+    opacity: 1;
+  }
+
+  .pvb__weight {
+    grid-row: 2;
+    text-align: center;
+    font-size: max(12px, 1.9cqw);
+    padding-top: max(6px, 0.9cqw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .pvb__weight small {
+    font-size: max(8px, 1.05cqw);
+    opacity: 0.45;
+  }
+
+  .pvb__rule {
+    grid-row: 3;
+    height: 2px;
+    background: currentColor;
+    opacity: 0.22;
+    margin: max(10px, 1.5cqw) 0 max(8px, 1.1cqw);
+  }
+
+  .pvb__product {
+    grid-row: 4;
+    text-align: center;
+    font-size: max(13px, 2.2cqw);
+    font-weight: 600;
+    opacity: 0.35;
+    position: relative;
+  }
+  .pvb__product.is-on {
+    opacity: 1;
+  }
+  .pvb__product em {
+    position: absolute;
+    left: max(-9px, -1.5cqw);
+    font-style: normal;
+    font-weight: 400;
+    opacity: 0.5;
+  }
+  .pvb__total {
+    grid-row: 4;
+    padding-left: max(8px, 1.3cqw);
+    font-size: max(13px, 2.2cqw);
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+</style>
