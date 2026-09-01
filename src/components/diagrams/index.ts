@@ -14,6 +14,8 @@ import LeakCascade from './LeakCascade.astro';
 import MalwareDoors from './MalwareDoors.astro';
 import PasswordAttacks from './PasswordAttacks.astro';
 import PasswordStrength from './PasswordStrength.astro';
+import PlaceValueBinary from './PlaceValueBinary.astro';
+import PlaceValueDecimal from './PlaceValueDecimal.astro';
 import Takeaways from './Takeaways.astro';
 import TwoPadlocks from './TwoPadlocks.astro';
 import WifiRisk from './WifiRisk.astro';
@@ -42,6 +44,8 @@ export const diagrams: Record<string, any> = {
 
   // Урок 3 — двійкова система.
   'current-two-states': CurrentTwoStates,
+  'place-value-decimal': PlaceValueDecimal,
+  'place-value-binary': PlaceValueBinary,
   'binary-ladder': BinaryLadder,
   'byte-scale': ByteScale,
 };

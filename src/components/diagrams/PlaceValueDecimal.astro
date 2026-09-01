@@ -1,0 +1,127 @@
+---
+/**
+ * Слайд 6 — 131 у десятковій: що саме означає кожна цифра.
+ *
+ * Підручник малює це таблицею, де «Цифри» — рядок заголовків, а внизу стоїть
+ * «Разом» із фрагментами «1 × 100 +» по клітинках. На папері воно читається,
+ * на слайді — ні: саме число 131 стає невидимим, а «+» висять у кінці кожної
+ * клітинки. Тут число написане числом, велике, а під кожною цифрою — її місце,
+ * її вага й те, що вона дає.
+ *
+ * CSS grid, а не SVG: цифра, підпис місця й добуток мусять стояти рівно один
+ * під одним, а ширини гліфів знає лише браузер (та сама причина, що в
+ * DomainAnatomy).
+ *
+ * Степінь (10²) стоїть дрібним підписом під вагою, а не замість неї: у восьмому
+ * класі спершу «сотні», і аж потім «десять у другому степені». Повне пояснення
+ * степенів — у конспекті під декою.
+ */
+
+/** З підручника, с. 7. */
+const DIGITS = [
+  { d: '1', place: 'сотні', weight: '100', power: '10²', product: '100' },
+  { d: '3', place: 'десятки', weight: '10', power: '10¹', product: '30' },
+  { d: '1', place: 'одиниці', weight: '1', power: '10⁰', product: '1' },
+];
+const TOTAL = '131';
+---
+<div class="pv">
+  {DIGITS.map(({ d }, i) => (
+    <span class="pv__digit" style={`grid-column: ${i + 1}`}>{d}</span>
+  ))}
+  {DIGITS.map(({ place }, i) => (
+    <span class="pv__place" style={`grid-column: ${i + 1}`}>{place}</span>
+  ))}
+  {DIGITS.map(({ weight, power }, i) => (
+    <span class="pv__weight" style={`grid-column: ${i + 1}`}>
+      × {weight}
+      <small>{power}</small>
+    </span>
+  ))}
+
+  <span class="pv__rule" style={`grid-column: 1 / ${DIGITS.length + 2}`}></span>
+
+  {DIGITS.map(({ product }, i) => (
+    <span class="pv__product" style={`grid-column: ${i + 1}`}>
+      {i > 0 && <em>+</em>}{product}
+    </span>
+  ))}
+  <span class="pv__total" style={`grid-column: ${DIGITS.length + 1}`}>= {TOTAL}</span>
+</div>
+
+<style>
+  /* Одна колонка на цифру плюс колонка результату. П'ять рядків: цифра ·
+     назва місця · вага · риска · добуток. */
+  .pv {
+    display: grid;
+    grid-template-columns: repeat(3, auto) auto;
+    justify-content: center;
+    align-content: center;
+    column-gap: max(14px, 2.6cqw);
+    font-family: var(--mono);
+  }
+
+  .pv__digit {
+    grid-row: 1;
+    text-align: center;
+    font-size: max(30px, 6cqw);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--accent);
+    padding-bottom: max(4px, 0.6cqw);
+    border-bottom: 2px solid var(--accent);
+  }
+  .pv__place {
+    grid-row: 2;
+    text-align: center;
+    font-family: var(--sans);
+    font-size: max(12px, 1.7cqw);
+    padding-top: max(6px, 0.9cqw);
+    opacity: 0.7;
+  }
+  .pv__weight {
+    grid-row: 3;
+    text-align: center;
+    font-size: max(13px, 2cqw);
+    padding-top: max(4px, 0.5cqw);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .pv__weight small {
+    font-size: max(9px, 1.15cqw);
+    opacity: 0.45;
+  }
+
+  .pv__rule {
+    grid-row: 4;
+    height: 2px;
+    background: currentColor;
+    opacity: 0.22;
+    margin: max(10px, 1.6cqw) 0 max(8px, 1.2cqw);
+  }
+
+  .pv__product {
+    grid-row: 5;
+    text-align: center;
+    font-size: max(15px, 2.6cqw);
+    font-weight: 600;
+    position: relative;
+  }
+  /* Плюс живе між колонками, а не висить у кінці клітинки. */
+  .pv__product em {
+    position: absolute;
+    left: max(-11px, -1.9cqw);
+    font-style: normal;
+    font-weight: 400;
+    opacity: 0.4;
+  }
+  .pv__total {
+    grid-row: 5;
+    padding-left: max(10px, 1.6cqw);
+    font-size: max(15px, 2.6cqw);
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+</style>
