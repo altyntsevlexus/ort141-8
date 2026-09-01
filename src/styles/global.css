@@ -1415,6 +1415,24 @@ kbd {
   .slide-visual--table table.is-reveal td:first-child {
     font-family: var(--sans);
   }
+  /* Fixed layout is right until a table has too many columns to divide: the
+     розряд expansion has nine, so each column gets ~40px and every cell breaks
+     mid-token. Those scroll sideways instead, inside the slide — the slide
+     itself still fits the screen. */
+  .slide-visual--table:has(table.is-wide) {
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+  .slide-visual--table table.is-wide {
+    table-layout: auto;
+    width: max-content;
+    min-width: 100%;
+  }
+  .slide-visual--table table.is-wide th,
+  .slide-visual--table table.is-wide td {
+    overflow-wrap: normal;
+    white-space: nowrap;
+  }
 
   /* Same story for prose tables in the supporting material: the glossary's
      term column is long enough to push the whole page sideways. */
