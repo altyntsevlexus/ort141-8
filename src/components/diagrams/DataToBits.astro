@@ -1,0 +1,82 @@
+---
+/**
+ * Слайд 1 — відкриття уроку: що взагалі означає «кодування даних».
+ *
+ * Три різні на вигляд речі — текст, зображення, звук — сходяться в одну
+ * послідовність нулів і одиниць. Це теза всього блоку, і саме тому вона стоїть
+ * на першому слайді: далі урок лише пояснює, як саме цей перехід відбувається.
+ *
+ * Збіг ліній у одну точку тут і є змістом малюнка. Якби кожне джерело йшло у
+ * власний рядок бітів, картинка казала б «є три різні кодування» — тобто
+ * протилежне до того, що потрібно.
+ */
+import { TYPE, VB } from './_shared';
+
+const BOX = { x: 40, w: 215, h: 76 };
+const SRC = [
+  { label: 'Текст', y: 66 },
+  { label: 'Зображення', y: 172 },
+  { label: 'Звук', y: 278 },
+];
+/** Точка, у якій усі три лінії стають однією. */
+const JOIN = { x: 452, y: 210 };
+const BAND = { x: 474, y: 122, w: 486, h: 176 };
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Текст, зображення і звук сходяться в одну послідовність нулів і одиниць">
+  {SRC.map(({ label, y }, i) => {
+    const cy = y + BOX.h / 2;
+    return (
+      <g>
+        <path d={`M ${BOX.x + BOX.w} ${cy} C ${BOX.x + BOX.w + 90} ${cy},
+                   ${JOIN.x - 110} ${JOIN.y}, ${JOIN.x} ${JOIN.y}`}
+              fill="none" stroke="currentColor" stroke-width="2" opacity="0.3" />
+        <rect x={BOX.x} y={y} width={BOX.w} height={BOX.h} rx="12"
+              fill="none" stroke="currentColor" stroke-width="2" opacity="0.4" />
+
+        {i === 0 && (
+          <text x={BOX.x + 36} y={cy + 12} text-anchor="middle" font-size="34"
+                font-weight="700" font-family="var(--mono)"
+                fill="currentColor" opacity="0.55">А</text>
+        )}
+        {i === 1 && (
+          <g stroke="currentColor" stroke-width="2.5" fill="none" opacity="0.55">
+            <rect x={BOX.x + 18} y={cy - 17} width="36" height="34" rx="4" />
+            <path d={`M ${BOX.x + 22} ${cy + 12} l 10 -14 l 8 9 l 7 -8 l 6 13 z`}
+                  fill="currentColor" stroke="none" />
+          </g>
+        )}
+        {i === 2 && (
+          <g fill="currentColor" opacity="0.55">
+            {[0, 1, 2, 3].map((k) => {
+              const h = [16, 32, 24, 12][k];
+              return <rect x={BOX.x + 22 + k * 10} y={cy - h / 2}
+                           width="5" height={h} rx="2.5" />;
+            })}
+          </g>
+        )}
+
+        <text x={BOX.x + 74} y={cy + 9} font-size={TYPE.sub}
+              fill="currentColor" opacity="0.8">{label}</text>
+      </g>
+    );
+  })}
+
+  <path d={`M ${JOIN.x - 4} ${JOIN.y - 9} L ${JOIN.x + 14} ${JOIN.y} L ${JOIN.x - 4} ${JOIN.y + 9} z`}
+        fill="var(--accent)" />
+
+  <rect x={BAND.x} y={BAND.y} width={BAND.w} height={BAND.h} rx="16"
+        fill="var(--accent)" fill-opacity="0.08"
+        stroke="var(--accent)" stroke-width="2.5" />
+  <text x={BAND.x + BAND.w / 2} y={BAND.y + 76} text-anchor="middle"
+        font-size="32" font-weight="700" font-family="var(--mono)"
+        letter-spacing="2" fill="var(--accent)">01000001 01101000</text>
+  <text x={BAND.x + BAND.w / 2} y={BAND.y + 128} text-anchor="middle"
+        font-size="32" font-weight="700" font-family="var(--mono)"
+        letter-spacing="2" fill="var(--accent)">11010000 10010000</text>
+
+  <text x={BAND.x + BAND.w / 2} y={BAND.y + BAND.h + 44} text-anchor="middle"
+        font-size={TYPE.sub} fill="currentColor" opacity="0.7">
+    одна послідовність нулів і одиниць
+  </text>
+</svg>
