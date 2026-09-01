@@ -1,7 +1,10 @@
 import AgendaArc from './AgendaArc.astro';
 import AuditChecklist from './AuditChecklist.astro';
+import BinaryLadder from './BinaryLadder.astro';
 import BrowserDoors from './BrowserDoors.astro';
+import ByteScale from './ByteScale.astro';
 import CaseTimeline from './CaseTimeline.astro';
+import CurrentTwoStates from './CurrentTwoStates.astro';
 import DdosFanin from './DdosFanin.astro';
 import DeepfakeSource from './DeepfakeSource.astro';
 import DomainAnatomy from './DomainAnatomy.astro';
@@ -36,4 +39,9 @@ export const diagrams: Record<string, any> = {
   'two-padlocks': TwoPadlocks,
   'domain-anatomy': DomainAnatomy,
   'audit-checklist': AuditChecklist,
+
+  // Урок 3 — двійкова система.
+  'current-two-states': CurrentTwoStates,
+  'binary-ladder': BinaryLadder,
+  'byte-scale': ByteScale,
 };

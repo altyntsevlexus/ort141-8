@@ -1,0 +1,134 @@
+---
+/**
+ * Слайд 8 — з десяткової у двійкову: ділити на 2 і читати остачі знизу вгору.
+ *
+ * Зроблено на CSS grid, а не в SVG, з тієї самої причини, що й DomainAnatomy:
+ * це стовпчик моноширинної арифметики, і ширини гліфів знає лише браузер.
+ * У SVG колонки довелося б розставляти за припущеною шириною символа.
+ *
+ * Стрілка «читати знизу вгору» сама йде знизу вгору: остачі в зворотному
+ * порядку — це те місце, де клас помиляється, тому напрямок показано, а не
+ * дописано словами збоку.
+ */
+
+/** Ділення 131 на 2 до нуля. Читається знизу вгору як 10000011. */
+const ROWS = [
+  { n: 131, q: 65, r: 1 },
+  { n: 65, q: 32, r: 1 },
+  { n: 32, q: 16, r: 0 },
+  { n: 16, q: 8, r: 0 },
+  { n: 8, q: 4, r: 0 },
+  { n: 4, q: 2, r: 0 },
+  { n: 2, q: 1, r: 0 },
+  { n: 1, q: 0, r: 1 },
+];
+---
+<div class="lad">
+  {ROWS.map(({ n, q, r }, i) => (
+    <>
+      <span class="lad__div" style={`grid-row: ${i + 1}`}>{n} ÷ 2 =</span>
+      <span class="lad__q" style={`grid-row: ${i + 1}`}>{q}</span>
+      <span class="lad__ost" style={`grid-row: ${i + 1}`}>ост.</span>
+      <span class="lad__r" style={`grid-row: ${i + 1}`}>{r}</span>
+    </>
+  ))}
+
+  <span class="lad__arrow">читати знизу вгору</span>
+
+  <span class="lad__result">
+    <span class="lad__result-label">результат</span>
+    <span class="lad__result-value">10000011</span>
+  </span>
+</div>
+
+<style>
+  /* Чотири колонки арифметики плюс колонка стрілки. Кожна колонка міряє себе
+     сама — саме тому це grid, а не SVG. */
+  .lad {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    justify-content: center;
+    align-content: center;
+    column-gap: max(6px, 0.9cqw);
+    row-gap: max(2px, 0.3cqw);
+    font-family: var(--mono);
+    font-size: max(12px, 1.7cqw);
+    line-height: 1.3;
+  }
+
+  .lad__div {
+    grid-column: 1;
+    text-align: right;
+    white-space: pre;
+  }
+  .lad__q {
+    grid-column: 2;
+    text-align: right;
+    min-width: 3ch;
+  }
+  .lad__ost {
+    grid-column: 3;
+    opacity: 0.45;
+    padding-left: max(8px, 1.2cqw);
+  }
+  .lad__r {
+    grid-column: 4;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Стрілка займає всю висоту колонки остач і вістрям дивиться вгору. */
+  .lad__arrow {
+    grid-column: 5;
+    grid-row: 1 / 9;
+    position: relative;
+    margin-left: max(10px, 1.6cqw);
+    padding-left: max(12px, 1.8cqw);
+    border-left: 2px solid var(--accent);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--sans);
+    font-size: max(10px, 1.25cqw);
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+  }
+  .lad__arrow::before {
+    content: '';
+    position: absolute;
+    /* rotate(180deg) перевертає бокс, тому вістря стрілки ставимо знизу — на
+       екрані воно опиниться вгорі, біля першої остачі. */
+    bottom: -1px;
+    right: -1px;
+    width: max(7px, 0.85cqw);
+    height: max(7px, 0.85cqw);
+    border-left: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(-45deg);
+    transform-origin: left bottom;
+  }
+
+  .lad__result {
+    grid-column: 1 / 5;
+    margin-top: max(10px, 1.6cqw);
+    padding-top: max(8px, 1.2cqw);
+    border-top: 1px solid currentColor;
+    border-color: color-mix(in srgb, currentColor 22%, transparent);
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: max(10px, 1.4cqw);
+  }
+  .lad__result-label {
+    font-family: var(--sans);
+    font-size: max(10px, 1.25cqw);
+    opacity: 0.55;
+  }
+  .lad__result-value {
+    font-size: max(18px, 2.9cqw);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+  }
+</style>
