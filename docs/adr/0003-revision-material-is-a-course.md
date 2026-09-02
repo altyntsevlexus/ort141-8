@@ -42,8 +42,7 @@ the viewer:
 
 - a **Callout** naming the must-have slides, and a second naming what can be skipped;
 - «Що треба знати після повторення»;
-- a **SelfCheck** — four questions whose answers stay hidden until clicked;
-- one paragraph on why the material is in the course at all.
+- a **SelfCheck** — four questions whose answers stay hidden until clicked.
 
 `CONTEXT.md` no longer claims a Курс is a Блок. Every Блок is a Курс; Повторення is the
 курс that is not a Блок, and its `span` and `load` say how it is worked through rather
