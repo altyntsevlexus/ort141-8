@@ -1,0 +1,38 @@
+---
+/**
+ * Self-check questions under a Повторення deck. The answer is hidden until
+ * clicked: a reader who can answer never opens it, and one who cannot learns
+ * which slide to go back to. Same reveal-on-click idea as an exercise table's
+ * answer column, so the two behave alike.
+ */
+interface Props {
+  items: { q: string; a: string }[];
+  label?: string;
+}
+const { items, label = 'Перевір себе' } = Astro.props;
+---
+<div class="selfcheck">
+  <div class="selfcheck__label">{label}</div>
+  <ol class="selfcheck__list">
+    {
+      items.map((item) => (
+        <li>
+          <p class="selfcheck__q">{item.q}</p>
+          <button class="selfcheck__a" type="button" aria-expanded="false">
+            <span class="selfcheck__a-text">{item.a}</span>
+            <span class="selfcheck__a-hint" aria-hidden="true">показати відповідь</span>
+          </button>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.selfcheck__a').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const shown = btn.classList.toggle('is-shown');
+      btn.setAttribute('aria-expanded', String(shown));
+    });
+  });
+</script>

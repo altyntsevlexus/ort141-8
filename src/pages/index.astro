@@ -1,12 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
-import { allCourses, courseUrl, themesOf } from '../lib/nav';
+import { allCourses, courseUrl, themeCount, themesOf } from '../lib/nav';
 
 const courses = await allCourses();
 const cards = await Promise.all(
   courses.map(async (course) => ({
     course,
-    themeCount: (await themesOf(course.id)).length,
+    count: (await themesOf(course.id)).length,
   })),
 );
 ---
@@ -20,7 +20,7 @@ const cards = await Promise.all(
 
     <div class="course-grid" data-count={cards.length}>
       {
-        cards.map(({ course, themeCount }) => (
+        cards.map(({ course, count }) => (
           <a class="course-card" href={courseUrl(course.id)}>
             <div class="course-card__banner" style={`background: ${course.data.tint}`}>
               <div class="course-card__glyph" style={`background: ${course.data.color}`}>
@@ -34,7 +34,7 @@ const cards = await Promise.all(
               <h2 class="course-card__title">{course.data.title}</h2>
               <p class="course-card__desc">{course.data.desc}</p>
               <div class="course-card__meta">
-                <span>{themeCount > 0 ? `${themeCount} тем` : "матеріали готуються"}</span>
+                <span>{count > 0 ? themeCount(count) : "матеріали готуються"}</span>
                 <i aria-hidden="true">•</i>
                 <span>{course.data.load}</span>
               </div>

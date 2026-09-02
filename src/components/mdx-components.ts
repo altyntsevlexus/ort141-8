@@ -4,6 +4,7 @@ import Keys from './Keys.astro';
 import Practice from './Practice.astro';
 import Screenshot from './Screenshot.astro';
 import Section from './Section.astro';
+import SelfCheck from './SelfCheck.astro';
 import Steps from './Steps.astro';
 import Syntax from './Syntax.astro';
 
@@ -18,6 +19,7 @@ export const mdxComponents = {
   Practice,
   Screenshot,
   Section,
+  SelfCheck,
   Steps,
   Syntax,
 };
