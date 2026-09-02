@@ -1104,12 +1104,14 @@ body.is-immersive-lock {
   color: var(--code-fg);
 }
 
+/* Label above the body, not beside it. Side by side, the label was a column
+   whose width the longest label decided — «Метод ділення з остачами» left the
+   text a narrow ribbon, while «Міф» wasted the room. Stacked, the body always
+   spans the box, and this matches how a SelfCheck labels itself. */
 .callout {
   max-width: 680px;
   border-radius: 14px;
   padding: 18px 20px;
-  display: flex;
-  gap: 14px;
   margin: 0 0 14px;
 }
 .callout__label {
@@ -1118,8 +1120,7 @@ body.is-immersive-lock {
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  flex-shrink: 0;
-  padding-top: 2px;
+  margin-bottom: 10px;
 }
 .callout__body {
   font-size: 15px;
