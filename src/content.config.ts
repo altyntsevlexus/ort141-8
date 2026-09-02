@@ -45,6 +45,12 @@ const visual = z.discriminatedUnion('type', [
 const slide = z.object({
   kicker: z.string(),
   title: z.string(),
+  /**
+   * The claim under the title, when the title is a topic name rather than a
+   * sentence. Capped so it stays one line of head and does not start eating the
+   * height the visual needs. See CONTEXT.md on Презентація.
+   */
+  subtitle: z.string().max(120).optional(),
   visual: visual.optional(),
   /**
    * One sentence at the foot of the slide, saying what the visual means. Not a

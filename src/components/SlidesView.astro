@@ -36,6 +36,7 @@ const { color, tint } = course.data;
               <div class="slide__head">
                 <div class="slide__kicker" style={`color: ${color}`}>{slide.kicker}</div>
                 <h2>{slide.title}</h2>
+                {slide.subtitle && <p class="slide__subtitle">{slide.subtitle}</p>}
               </div>
               {slide.visual && <SlideVisual visual={slide.visual} />}
               {slide.idea && <p class="slide__idea">{slide.idea}</p>}

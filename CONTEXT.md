@@ -5,21 +5,31 @@ detail, no plans, no decisions. Decisions live in `docs/adr/`.
 
 ## Курс
 
-A division of the subject — one of the three **блоки** the semester is split into.
+A division of the subject — in most cases one of the three **блоки** the semester is
+split into.
 
 This is the term most likely to mislead. In ordinary usage a "курс" is something a
 school offers across grades — "the Python course", open to 10th and 11th. Here the
 entire site is one subject in one grade, so a курс is a division inside it, and the
-divisions are exactly the semester plan's блоки:
+teaching divisions are exactly the semester plan's блоки:
 
 | Курс | Блок | Тижні |
 |---|---|---|
+| Повторення з попередніх класів | — | — |
 | Кодування даних і кібербезпека | 1 | 1–3 |
 | Працюємо із числами | 2 | 4–9 |
 | Програмування | 3 | 10–16 |
 
-A Курс has a title, a short description, an accent colour, a glyph, a **span** (the
-weeks it occupies) and a **load** (how many lessons it contains). It is addressable at
+Most курси are блоки, but not all: **Повторення з попередніх класів** is a курс
+that is not a блок. It holds the material the semester assumes but does not
+teach — last year's decks, worked through at home — so it occupies no weeks and
+carries no lesson count. Its **span** says how it is worked through
+(`самостійно`) rather than when, and its **load** does the same. It sorts first
+(`order: 0`) because it comes before the teaching, not inside it.
+
+A Курс has a title, a short description, an accent colour, a glyph, a **span** and a
+**load**. For a блок those two are the weeks it occupies and the lessons it contains;
+for Повторення they say how it is worked through instead. It is addressable at
 `/courses/<slug>/`.
 
 A Курс may hold no Теми at all — that is a block whose material has not been written
@@ -27,8 +37,8 @@ yet, not an error.
 
 > This mapping is new. Until the real curriculum arrived, the site carried four
 > placeholder курси taken from the design prototype (Excel, Python, Figma, веб), and
-> this glossary recorded that a Блок was *not* a Курс. That is no longer true: a Курс
-> **is** a Блок.
+> this glossary recorded that a Блок was *not* a Курс. Every Блок is now a Курс —
+> but the reverse does not hold, because Повторення is a курс with no блок.
 
 ## Тема
 
@@ -77,7 +87,15 @@ Kind is **not** part of the URL. All three are renderings of the same address, s
   A slide therefore has these named parts, and no others:
 
   - **Kicker** — where in the lesson we are («Шкідливе ПЗ · класифікація 2»).
-  - **Title** — the one claim the slide makes, as a sentence.
+  - **Title** — what the slide is. Usually the one claim it makes, as a sentence;
+    on a deck that names its slides by topic, the topic name, with the claim
+    moved into the Subtitle below it.
+  - **Subtitle** — the claim, on the slides whose Title is a topic name rather
+    than a sentence. Optional, and it exists so the two readings of a Title can
+    coexist in one deck: a slide is never *both* a topic name and nothing else.
+    Capped at 120 characters — the head is allowed two lines, not a paragraph.
+    When a Title is already the claim (a title slide, a summary), there is no
+    Subtitle to add.
   - **Visual** — the diagram, table, code fragment or image that carries it. Optional:
     some slides are a title and nothing else, and that is a legitimate slide.
   - **Idea** — one sentence at the foot of the slide, saying what the visual *means*.
@@ -85,6 +103,17 @@ Kind is **not** part of the URL. All three are renderings of the same address, s
     restates the Title, and it is never a list — there is at most one per slide.
   - **Links** — where to read more, on the few slides that are about real events.
     Shown at the foot in place of an Idea.
+
+  > Because the Title can be either a topic name or a claim, a deck should pick
+  > one and hold it. Урок 2 names its slides by topic, so nearly every slide
+  > there carries a Subtitle; урок 3 states the claim in the Title and carries
+  > none. Mixed within one deck, the head changes shape from slide to slide.
+
+  > A Kicker says where we are and a Title says what this is, so they must not
+  > say the same thing. Moving the topic into the Title made «Шкідливе ПЗ ·
+  > Класифікація 1» / «Шкідливе ПЗ за метою» repeat itself, and left the summary
+  > slide reading «Підсумок» twice. Where that happens, the Kicker keeps the
+  > section and the Title takes the specific.
 
   > An earlier model allowed up to three **anchors** per slide: short glanceable
   > phrases with bullets. They failed in both directions — three fragments read as a
