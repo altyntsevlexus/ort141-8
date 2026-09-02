@@ -739,6 +739,18 @@ h3 {
   max-width: 69.89cqw;
   text-wrap: pretty;
 }
+/* Second line of the head: the claim, when the title above it is a topic name.
+   Sized between the title and the kicker so the order of the three is legible at
+   a glance from the back of the room. */
+.slide__subtitle {
+  font-size: max(15px, 2.15cqw);
+  line-height: 1.35;
+  margin: 0.4em 0 0;
+  color: var(--text-body);
+  max-width: 69.89cqw;
+  text-wrap: pretty;
+}
+
 /* A slide is head + visual + anchors. The visual takes all the room left over,
    so it is the thing that grows on a projector — not the text. */
 .slide__inner {
@@ -1007,6 +1019,7 @@ body.is-immersive-lock {
 .support .callout,
 .support .steps,
 .support .practice,
+.support .selfcheck,
 .support .keys,
 .support .shot {
   max-width: none;
@@ -1262,6 +1275,90 @@ kbd {
 }
 .practice__list li > p {
   margin: 0;
+}
+
+/* --- Self-check (Повторення) ------------------------------------------ */
+
+.selfcheck {
+  max-width: 680px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 26px;
+  margin: 0 0 20px;
+}
+.selfcheck__label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-4);
+  margin-bottom: 16px;
+}
+.selfcheck__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  counter-reset: check;
+}
+.selfcheck__list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+}
+.selfcheck__list li::before {
+  counter-increment: check;
+  content: '0' counter(check);
+  font-family: var(--mono);
+  color: var(--muted-4);
+  grid-row: 1;
+}
+.selfcheck__q {
+  margin: 0;
+  grid-column: 2;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--text-body);
+}
+/* The answer is a button so it is reachable by keyboard: the hint and the
+   answer swap places, and the box keeps its size so nothing jumps. */
+.selfcheck__a {
+  grid-column: 2;
+  justify-self: start;
+  display: block;
+  border: 1px dashed var(--border-hover);
+  border-radius: 10px;
+  background: transparent;
+  padding: 7px 12px;
+  font: inherit;
+  font-size: 14.5px;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--muted);
+  cursor: pointer;
+}
+.selfcheck__a:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.selfcheck__a .selfcheck__a-text {
+  display: none;
+}
+.selfcheck__a.is-shown {
+  border-style: solid;
+  border-color: var(--border);
+  color: var(--text-body);
+  cursor: default;
+}
+.selfcheck__a.is-shown .selfcheck__a-text {
+  display: block;
+}
+.selfcheck__a.is-shown .selfcheck__a-hint {
+  display: none;
 }
 
 .empty-note {

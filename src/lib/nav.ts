@@ -21,6 +21,19 @@ export const themesOf = async (courseId: string) =>
     (a, b) => a.data.order - b.data.order,
   );
 
+/**
+ * «1 тема», «4 теми», «6 тем» — the card meta line reads as a sentence, so the
+ * count has to agree with it. Ukrainian picks the form by the last digit, except
+ * in the teens, where every number takes the genitive plural.
+ */
+export function themeCount(n: number) {
+  const last = n % 10;
+  const teens = n % 100 >= 11 && n % 100 <= 14;
+  if (!teens && last === 1) return `${n} тема`;
+  if (!teens && last >= 2 && last <= 4) return `${n} теми`;
+  return `${n} тем`;
+}
+
 export const courseOf = async (theme: Theme) => {
   const course = await getEntry(theme.data.course);
   if (!course) throw new Error(`Unknown course: ${theme.data.course.id}`);
