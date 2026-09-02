@@ -24,6 +24,11 @@ const UNITS = [
   { name: 'ТБ', sub: '', h: 260 },
 ];
 
+/* The four × 1024 share one baseline: they are the same multiplier repeated,
+   so staggering them up the staircase made four identical labels look like four
+   different facts. Sits above the topmost connector, clear of every bar. */
+const ALIGN_Y = 44;
+
 const x = (i: number) => X0 + i * STEP;
 const top = (i: number) => BASE - UNITS[i].h;
 
@@ -48,7 +53,7 @@ const STEPS = UNITS.slice(1).map((_, i) => ({
             stroke-dasharray={first ? undefined : '5 5'}
             opacity={first ? 0.9 : 0.35} />
       <text x={(x(from) + BAR_W + x(to)) / 2}
-            y={(top(from) + top(to)) / 2 - (first ? 20 : 14)}
+            y={first ? (top(from) + top(to)) / 2 - 20 : ALIGN_Y}
             text-anchor="middle"
             font-size={first ? TYPE.label : TYPE.sub}
             font-weight={first ? 700 : 400}

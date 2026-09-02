@@ -1,6 +1,7 @@
 import AgendaArc from './AgendaArc.astro';
 import AuditChecklist from './AuditChecklist.astro';
 import BinaryLadder from './BinaryLadder.astro';
+import BitStates from './BitStates.astro';
 import BrowserDoors from './BrowserDoors.astro';
 import ByteScale from './ByteScale.astro';
 import CaseTimeline from './CaseTimeline.astro';
@@ -49,5 +50,6 @@ export const diagrams: Record<string, any> = {
   'place-value-decimal': PlaceValueDecimal,
   'place-value-binary': PlaceValueBinary,
   'binary-ladder': BinaryLadder,
+  'bit-states': BitStates,
   'byte-scale': ByteScale,
 };

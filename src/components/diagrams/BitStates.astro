@@ -1,0 +1,71 @@
+---
+/**
+ * Слайд 12 — біт як одна позиція з двома станами, і що дає їх додавання.
+ *
+ * Слайд раніше був заголовком без малюнка, і «0 або 1» на ньому нічого не
+ * робило: клас уже почув це на слайді 2 про струм. Тут біт показаний не сам, а
+ * в ряду — один біт дає два стани, кожен наступний подвоює. Саме звідси
+ * береться 256 на наступному слайді, а потім 0–255 у RGB та IPv4 на уроці 4,
+ * тому подвоєння варте власного малюнка.
+ *
+ * Три перші стовпці перелічують усі комбінації, бо в них їх можна перелічити.
+ * Восьмий біт перелічити не можна — там пропуск і лише перша й остання
+ * комбінації, а число під ним і є висновок.
+ */
+import { TYPE, VB } from './_shared';
+
+const COLS = [
+  { bits: '1 біт', rows: ['0', '1'], count: '2' },
+  { bits: '2 біти', rows: ['00', '01', '10', '11'], count: '4' },
+  {
+    bits: '3 біти',
+    rows: ['000', '001', '010', '011', '100', '101', '110', '111'],
+    count: '8',
+  },
+  { bits: '8 бітів', rows: ['00000000', '⋮', '11111111'], count: '256' },
+];
+
+const CX = [120, 330, 545, 845];
+const HEAD_Y = 44;
+const ROW0 = 96;
+const ROW_H = 27;
+const COUNT_Y = 352;
+const WORD_Y = 388;
+
+/** Між третім і четвертим стовпцем — не один крок, а п'ять. */
+const GAPS = [
+  { at: (CX[0] + CX[1]) / 2, label: '× 2' },
+  { at: (CX[1] + CX[2]) / 2, label: '× 2' },
+  { at: (CX[2] + CX[3]) / 2, label: '× 2 ще пʼять разів' },
+];
+---
+<svg viewBox={`0 0 ${VB.w} ${VB.h}`} role="img"
+     aria-label="Один біт дає два стани, два біти — чотири, три біти — вісім, вісім бітів — двісті пʼятдесят шість станів">
+  {GAPS.map(({ at, label }) => (
+    <text x={at} y={ROW0 + 3 * ROW_H} text-anchor="middle"
+          font-size={TYPE.note} font-family="var(--mono)"
+          fill="currentColor" opacity="0.5">{label}</text>
+  ))}
+
+  {COLS.map(({ bits, rows, count }, i) => (
+    <g>
+      <text x={CX[i]} y={HEAD_Y} text-anchor="middle"
+            font-size={TYPE.sub} font-weight="600"
+            fill="currentColor">{bits}</text>
+
+      {rows.map((r, j) => (
+        <text x={CX[i]} y={ROW0 + j * ROW_H} text-anchor="middle"
+              font-size={20} font-family="var(--mono)"
+              fill="currentColor" opacity={r === '⋮' ? 0.45 : 0.75}>{r}</text>
+      ))}
+
+      <text x={CX[i]} y={COUNT_Y} text-anchor="middle"
+            font-size={54} font-weight="700"
+            fill="var(--accent)">{count}</text>
+      <text x={CX[i]} y={WORD_Y} text-anchor="middle"
+            font-size={TYPE.note} fill="currentColor" opacity="0.6">
+        {count === '2' || count === '4' ? 'стани' : 'станів'}
+      </text>
+    </g>
+  ))}
+</svg>
