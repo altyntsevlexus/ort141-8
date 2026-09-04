@@ -73,7 +73,6 @@ const { title, desc, glyph, color, tint } = course.data;
                     .filter(Boolean)
                     .join(' ')}
                   href={themeUrl(course.id, themeSlug(theme))}
-                  style={now ? `border-color: ${color}` : undefined}
                 >
                   <div style="flex: 1">
                     <div class="theme-card__title">{theme.data.title}</div>

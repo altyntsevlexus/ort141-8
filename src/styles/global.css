@@ -431,7 +431,7 @@ h3 {
 }
 /* Declared after .theme-card:hover, so the lifted shadow has to be restated
    here — otherwise .is-now's resting shadow wins on hover and the card stops
-   responding. The accent border comes inline and is kept on hover. */
+   responding. */
 .theme-card.is-now:hover {
   box-shadow: 0 6px 18px rgba(16, 24, 40, 0.07);
 }
