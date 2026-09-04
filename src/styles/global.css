@@ -125,19 +125,9 @@ h3 {
   text-decoration: none;
   color: inherit;
 }
-.brand__mark {
+.brand__logo {
   width: 34px;
   height: 34px;
-  border-radius: 10px;
-  background: var(--primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 15px;
-  flex-shrink: 0;
 }
 .brand__word {
   font-family: var(--serif);
