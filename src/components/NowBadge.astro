@@ -1,0 +1,23 @@
+---
+/**
+ * «Зараз вивчаємо» — shown on a Тема the class is working on right now, and on
+ * the Курс that holds one. Takes the host Курс's accent so the badge reads as
+ * part of that course rather than as a site-wide alert. See CONTEXT.md.
+ */
+interface Props {
+  color: string;
+  tint: string;
+  /** Set on the course card banner, where the badge sits on the tint already. */
+  solid?: boolean;
+}
+const { color, tint, solid = false } = Astro.props;
+---
+<span
+  class="now-badge"
+  style={solid
+    ? `background: ${color}; color: #fff`
+    : `background: ${tint}; color: ${color}`}
+>
+  <i class="now-badge__dot" aria-hidden="true"></i>
+  Зараз вивчаємо
+</span>

@@ -3,7 +3,8 @@ import { render } from 'astro:content';
 import SlideVisual from './SlideVisual.astro';
 import Sources from './Sources.astro';
 import { mdxComponents } from './mdx-components';
-import type { Course, Theme } from '../lib/nav';
+import NowBadge from './NowBadge.astro';
+import { isCurrent, type Course, type Theme } from '../lib/nav';
 
 interface Props {
   course: Course;
@@ -18,8 +19,11 @@ const { Content } = await render(theme);
 const { color, tint } = course.data;
 ---
 <main class="shell page" style="padding-top: 36px; padding-bottom: 80px">
-  <div class="theme-kicker" style={`color: ${color}`}>
-    Тема {number} · Презентація
+  <div class="theme-head">
+    <div class="theme-kicker" style={`color: ${color}`}>
+      Тема {number} · Презентація
+    </div>
+    {isCurrent(theme) && <NowBadge color={color} tint={tint} />}
   </div>
   <h1 class="theme-title">{theme.data.title}</h1>
 

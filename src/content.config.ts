@@ -76,6 +76,8 @@ const themes = defineCollection({
     order: z.number(),
     /** Marks a Тема whose material does not exist yet. */
     pending: z.boolean().optional(),
+    /** Marks a Тема the class is working on right now. See CONTEXT.md. */
+    current: z.boolean().optional(),
     /** Конспект only: the «Зміст теми» outline. Anchors must match section ids. */
     outline: z
       .array(z.object({ id: z.string(), label: z.string() }))
@@ -100,6 +102,17 @@ const themes = defineCollection({
         }),
       )
       .optional(),
+  })
+  /* Nothing is being worked on if there is nothing to work on yet: a pending
+     Тема has no material, so it cannot also be the current one. */
+  .superRefine((theme, ctx) => {
+    if (theme.pending === true && theme.current === true) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'A pending Тема cannot also be current — it has no material yet.',
+        path: ['current'],
+      });
+    }
   }),
 });
 

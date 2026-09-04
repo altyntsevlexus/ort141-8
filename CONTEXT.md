@@ -58,6 +58,18 @@ A Тема may be **pending**: it exists, is numbered, and is reachable, but its
 has not been made yet. A pending Тема shows no Kind badge, because the answer to "what
 kind of material is this" is not yet decided.
 
+A Тема may also be **current**: it is what the class is working on right now. The
+marker says «Зараз вивчаємо» and appears wherever the Тема does — on its card in the
+Курс's timeline, on the Курс's card on the home page, and on the Тема's own page. A
+Курс is never marked current in its own right: it carries the marker when at least one
+of its Теми does, so the state lives in the material and the course only reflects it.
+
+Current and pending are mutually exclusive — there is nothing to work on in a Тема
+whose material does not exist — and the content schema rejects a Тема that claims both.
+Several Теми may be current at once, across more than one Курс: the four Теми of
+Повторення are worked through at home while the first уроки of блок 1 run in class.
+Being current says nothing about order and does not move a Тема on the timeline.
+
 ## Kind
 
 Which of three ways a Тема presents itself. Every Тема has exactly one, and it is

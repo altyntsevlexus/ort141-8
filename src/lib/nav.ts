@@ -34,6 +34,15 @@ export function themeCount(n: number) {
   return `${n} тем`;
 }
 
+/**
+ * «Зараз вивчаємо» — the Теми the class is working on right now. A Курс is
+ * marked current when it holds at least one of them; the label belongs to the
+ * material, so the course only reflects what its themes say.
+ */
+export const isCurrent = (theme: Theme) => theme.data.current === true;
+
+export const hasCurrent = (themes: Theme[]) => themes.some(isCurrent);
+
 export const courseOf = async (theme: Theme) => {
   const course = await getEntry(theme.data.course);
   if (!course) throw new Error(`Unknown course: ${theme.data.course.id}`);

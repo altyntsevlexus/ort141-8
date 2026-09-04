@@ -1,7 +1,15 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import Base from '../../../layouts/Base.astro';
-import { allCourses, homeUrl, themeSlug, themesOf, themeUrl } from '../../../lib/nav';
+import NowBadge from '../../../components/NowBadge.astro';
+import {
+  allCourses,
+  homeUrl,
+  isCurrent,
+  themeSlug,
+  themesOf,
+  themeUrl,
+} from '../../../lib/nav';
 
 export const getStaticPaths = (async () => {
   const courses = await allCourses();
@@ -40,25 +48,37 @@ const { title, desc, glyph, color, tint } = course.data;
         <div class="timeline">
           {themes.map((theme, i) => {
             const pending = theme.data.pending === true;
+            const now = isCurrent(theme);
             return (
               <div class="timeline__row">
                 <div class="timeline__rail">
                   <div
-                    class="timeline__num"
-                    style={`color: ${pending ? 'var(--muted-4)' : color}`}
+                    class={now ? 'timeline__num is-now' : 'timeline__num'}
+                    style={
+                      now
+                        ? `background: ${color}; border-color: ${color}`
+                        : `color: ${pending ? 'var(--muted-4)' : color}`
+                    }
                   >
                     {i + 1}
                   </div>
                   <div class="timeline__line" />
                 </div>
                 <a
-                  class={pending ? 'theme-card is-pending' : 'theme-card'}
+                  class={[
+                    'theme-card',
+                    pending && 'is-pending',
+                    now && 'is-now',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   href={themeUrl(course.id, themeSlug(theme))}
                 >
                   <div style="flex: 1">
                     <div class="theme-card__title">{theme.data.title}</div>
                     <div class="theme-card__meta">{theme.data.meta}</div>
                   </div>
+                  {now && <NowBadge color={color} tint={tint} />}
                   {!pending && (
                     <div
                       class="theme-card__kind"

@@ -1,7 +1,8 @@
 ---
 import { render } from 'astro:content';
 import { mdxComponents } from './mdx-components';
-import type { Course, Theme } from '../lib/nav';
+import NowBadge from './NowBadge.astro';
+import { isCurrent, type Course, type Theme } from '../lib/nav';
 
 interface Props {
   course: Course;
@@ -18,8 +19,13 @@ const href = pdf ? `${base}/pdf/${pdf.file}` : null;
 <main class="shell page" style="padding-top: 36px; padding-bottom: 70px">
   <div class="pdf-head">
     <div>
-      <div class="theme-kicker" style={`color: ${course.data.color}`}>
-        Тема {number} · PDF
+      <div class="theme-head">
+        <div class="theme-kicker" style={`color: ${course.data.color}`}>
+          Тема {number} · PDF
+        </div>
+        {isCurrent(theme) && (
+          <NowBadge color={course.data.color} tint={course.data.tint} />
+        )}
       </div>
       <h1>{theme.data.title}</h1>
     </div>

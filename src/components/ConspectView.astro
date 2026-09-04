@@ -1,7 +1,8 @@
 ---
 import { render } from 'astro:content';
 import { mdxComponents } from './mdx-components';
-import type { Course, Theme } from '../lib/nav';
+import NowBadge from './NowBadge.astro';
+import { isCurrent, type Course, type Theme } from '../lib/nav';
 
 interface Props {
   course: Course;
@@ -43,8 +44,13 @@ const { outline = [], duration, lead } = theme.data;
   }
 
   <article class="article">
-    <div class="theme-kicker" style={`color: ${course.data.color}`}>
-      Тема {number} · Конспект
+    <div class="theme-head">
+      <div class="theme-kicker" style={`color: ${course.data.color}`}>
+        Тема {number} · Конспект
+      </div>
+      {isCurrent(theme) && (
+        <NowBadge color={course.data.color} tint={course.data.tint} />
+      )}
     </div>
     <h1>{theme.data.title}</h1>
     {lead && <p class="article__lead">{lead}</p>}
