@@ -1743,17 +1743,18 @@ kbd {
     width: 56%;
   }
   /* Three columns in 350 px is 116 px each, and the glossary came out two words
-     to a line with «централізова / ним» split between them. From three columns
-     up the table takes the width it needs and scrolls inside its frame, with
+     to a line with «централізова / ним» split between them. A table that does
+     not stack (see the 560 px block) takes the width it needs and scrolls
+     inside its frame instead, with
      each column capped so a definition still wraps into a paragraph rather than
      one long line. The term column stays put while the rest travels. */
-  .prose-table:has(th:nth-child(3)) table {
+  .prose-table:not([data-stack]):has(th:nth-child(3)) table {
     width: max-content;
     min-width: 100%;
     table-layout: auto;
   }
-  .prose-table:has(th:nth-child(3)) th,
-  .prose-table:has(th:nth-child(3)) td {
+  .prose-table:not([data-stack]):has(th:nth-child(3)) th,
+  .prose-table:not([data-stack]):has(th:nth-child(3)) td {
     overflow-wrap: break-word;
     min-width: 92px;
     max-width: 200px;
@@ -1761,22 +1762,22 @@ kbd {
   /* The first two columns are labels; the last one carries the meaning. Keeping
      the labels narrow brings the start of that column on screen, so the row
      shows what it is about before anyone swipes. */
-  .prose-table:has(th:nth-child(3)) th:first-child,
-  .prose-table:has(th:nth-child(3)) td:first-child {
+  .prose-table:not([data-stack]):has(th:nth-child(3)) th:first-child,
+  .prose-table:not([data-stack]):has(th:nth-child(3)) td:first-child {
     max-width: 148px;
   }
-  .prose-table:has(th:nth-child(3)) th:nth-child(2),
-  .prose-table:has(th:nth-child(3)) td:nth-child(2) {
+  .prose-table:not([data-stack]):has(th:nth-child(3)) th:nth-child(2),
+  .prose-table:not([data-stack]):has(th:nth-child(3)) td:nth-child(2) {
     max-width: 116px;
   }
-  .prose-table:has(th:nth-child(3)) th:first-child,
-  .prose-table:has(th:nth-child(3)) td:first-child {
+  .prose-table:not([data-stack]):has(th:nth-child(3)) th:first-child,
+  .prose-table:not([data-stack]):has(th:nth-child(3)) td:first-child {
     position: sticky;
     left: 0;
     z-index: 1;
     background: var(--surface);
   }
-  .prose-table:has(th:nth-child(3)) th:first-child {
+  .prose-table:not([data-stack]):has(th:nth-child(3)) th:first-child {
     background: var(--surface-muted);
   }
   .deck__bar {
