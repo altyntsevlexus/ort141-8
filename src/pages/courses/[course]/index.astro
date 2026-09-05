@@ -74,17 +74,24 @@ const { title, desc, glyph, color, tint } = course.data;
                     .join(' ')}
                   href={themeUrl(course.id, themeSlug(theme))}
                 >
-                  <div style="flex: 1">
+                  <div class="theme-card__text">
                     <div class="theme-card__title">{theme.data.title}</div>
                     <div class="theme-card__meta">{theme.data.meta}</div>
                   </div>
-                  {now && <NowBadge color={color} tint={tint} />}
-                  {!pending && (
-                    <div
-                      class="theme-card__kind"
-                      style={`background: ${tint}; color: ${color}`}
-                    >
-                      {theme.data.kind}
+                  {/* One row, so a phone can stack the badges under the title
+                      instead of setting them beside it and squeezing the title
+                      into a column four words wide. */}
+                  {(now || !pending) && (
+                    <div class="theme-card__tags">
+                      {now && <NowBadge color={color} tint={tint} />}
+                      {!pending && (
+                        <div
+                          class="theme-card__kind"
+                          style={`background: ${tint}; color: ${color}`}
+                        >
+                          {theme.data.kind}
+                        </div>
+                      )}
                     </div>
                   )}
                   <div class="theme-card__arrow" aria-hidden="true">→</div>

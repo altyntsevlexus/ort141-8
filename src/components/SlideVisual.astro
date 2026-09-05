@@ -12,11 +12,12 @@ const { visual } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 // An unknown diagram name renders nothing rather than breaking the whole deck.
 const Diagram = visual.type === 'diagram' ? diagrams[visual.name] : null;
-// Розрядна таблиця має дев'ять колонок. На телефоні `table-layout: fixed` дає
-// кожній по 40 px і розриває «2⁷ = 128» посимвольно, тому широкі таблиці там
-// прокручуються вбік замість того, щоб стискатися. CSS не вміє рахувати
+// На телефоні `table-layout: fixed` ділить 350 px порівну між колонками, і з
+// чотирьох колонок кожна отримує ~78 px — «нульовий — крайній правий» рветься
+// на чотири рядки, а заголовок на три. Від чотирьох колонок таблиця
+// прокручується вбік замість того, щоб стискатися. CSS не вміє рахувати
 // колонки — рахуємо тут.
-const wideTable = visual.type === 'table' && visual.head.length > 4;
+const wideTable = visual.type === 'table' && visual.head.length > 3;
 ---
 {
   visual.type === 'diagram' && Diagram && (

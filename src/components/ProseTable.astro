@@ -1,0 +1,45 @@
+---
+/**
+ * Every markdown table in supporting material, wrapped in its own scroller.
+ * A table has a width it needs — the glossary's three columns want about
+ * 560 px — and a phone does not have it. Without a wrapper the only options are
+ * squeezing the columns until words break mid-syllable («централізова / ним»)
+ * or pushing the whole page sideways. Mapped onto `table` in mdx-components, so
+ * authors keep writing plain markdown.
+ *
+ * On a phone a three- or four-column table stops being a table and becomes one
+ * block per row. That only works if each value still says what it is, so the
+ * header labels are lifted out of the markup here and handed to CSS as custom
+ * properties — `td::before` prints them above the values. Reading the slot as
+ * a string is the only way to see them: slot content is opaque otherwise.
+ */
+const html = await Astro.slots.render('default');
+const labels = [...html.matchAll(/<th[^>]*>([\s\S]*?)<\/th>/gi)]
+  .map((m) => m[1].replace(/<[^>]+>/g, '').trim())
+  .filter(Boolean);
+// A table with no header row (or one this regex cannot read) simply gets no
+// labels: the stacked rows lose their captions, nothing breaks.
+const vars = labels
+  .map((label, i) => `--label-${i + 1}: ${JSON.stringify(label)}`)
+  .join('; ');
+
+/**
+ * Which tables become blocks on a phone. Column count alone does not say: the
+ * позиційна grid «Цифри | 1 | 3 | 1» has four columns like the розряд table
+ * next to it, but its headers are the digits of a number, and a digit printed
+ * as a caption above a value says nothing. A table stacks only when every
+ * header after the first is a word — then the caption is a name for the value
+ * under it. Wider grids scroll instead.
+ */
+const named = (label: string) => /\p{L}{3,}/u.test(label);
+const stack =
+  labels.length >= 3 && labels.length <= 4 && labels.slice(1).every(named);
+---
+<div
+  class="prose-table"
+  data-cols={labels.length || undefined}
+  data-stack={stack ? '' : undefined}
+  style={vars || undefined}
+>
+  <table set:html={html} />
+</div>

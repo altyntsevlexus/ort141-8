@@ -33,7 +33,7 @@ const { color, tint } = course.data;
         {slides.map((slide, i) => (
           <div
             class={i === 0 ? 'slide is-active' : 'slide'}
-            style={`background: ${tint}; --accent: ${color}`}
+            style={`background: ${tint}; --accent: ${color}; --tint: ${tint}`}
             data-slide={i}
           >
             <div class="slide__inner">

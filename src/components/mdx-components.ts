@@ -2,6 +2,7 @@ import Callout from './Callout.astro';
 import CodeBlock from './CodeBlock.astro';
 import Keys from './Keys.astro';
 import Practice from './Practice.astro';
+import ProseTable from './ProseTable.astro';
 import Screenshot from './Screenshot.astro';
 import Section from './Section.astro';
 import SelfCheck from './SelfCheck.astro';
@@ -17,6 +18,8 @@ export const mdxComponents = {
   CodeBlock,
   Keys,
   Practice,
+  /* Markdown tables render through a scroller. See ProseTable. */
+  table: ProseTable,
   Screenshot,
   Section,
   SelfCheck,

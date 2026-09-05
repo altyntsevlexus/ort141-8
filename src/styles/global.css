@@ -401,6 +401,16 @@ h3 {
   color: var(--muted-4);
 }
 
+.theme-card__text {
+  flex: 1;
+  min-width: 0;
+}
+.theme-card__tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
 .theme-card__title {
   font-family: var(--serif);
   font-size: 18.5px;
@@ -584,15 +594,19 @@ h3 {
   color: var(--text-body);
   padding-left: 22px;
 }
-.prose table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 15px;
+/* The frame belongs to the scroller, not the table: the table inside is free to
+   be wider than the column and scroll within it. See ProseTable. */
+.prose-table {
   margin: 0 0 16px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
 }
 .prose th,
 .prose td {
@@ -1513,10 +1527,18 @@ kbd {
     height: 30px;
     font-size: 13px;
   }
+  /* Wrapping put the badges beside the title, which left the title a column
+     four words wide. On a phone the card is a stack: title, meta, then the
+     badges on their own line. */
   .theme-card {
     padding: 16px 18px;
-    gap: 12px;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .theme-card__tags {
     flex-wrap: wrap;
+    gap: 8px;
   }
   .theme-card__arrow {
     display: none;
@@ -1542,14 +1564,90 @@ kbd {
     display: block;
   }
 
-  /* A 16:9 box is too short for real slide text on a phone; let it grow.
-     Sizes come from the container-query clamps, not from overrides here. */
+  /* The deck is the one block that has to hold a whole slide's worth of text,
+     and a phone has no width to spare, so it runs edge to edge. The card frame
+     goes with the margins — a border you cannot see the ends of is noise. */
+  .deck {
+    margin-inline: calc(var(--gutter) * -1);
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  /* Full-bleed, so the slide's own padding is what puts its text on the page's
+     column — same gutter, and a slide line runs as long as a prose line. */
+  .slide__inner {
+    padding-inline: max(var(--gutter), 5.645cqw);
+  }
+
+  /* A 16:9 box is too short for real slide text on a phone; let it grow. */
   .slide {
     aspect-ratio: auto;
     min-height: 320px;
   }
+  /* The cqw clamps are written for a projector, where the slide is a metre
+     wide. On a 350 px card every one of them bottoms out at its floor, and the
+     floors were set for a slide seen across a room, not held in a hand — so on
+     a phone the deck reads a step smaller than the prose beneath it. Raise the
+     floors; the cqw terms still win everywhere above this breakpoint. */
+  .slide__kicker {
+    font-size: 11px;
+  }
+  .slide h2 {
+    font-size: 23px;
+  }
+  .slide__subtitle {
+    font-size: 16px;
+  }
+  .slide__idea {
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .slide-visual--table table {
+    font-size: 14px;
+  }
+  .slide-visual--table th {
+    font-size: 11px;
+  }
+  .slide-visual--code pre {
+    font-size: 15px;
+  }
+  /* Both heads are capped at 70cqw so a projected line does not run the full
+     width of the wall. A phone is already a narrow column — the cap only adds
+     line breaks. */
+  .slide h2,
+  .slide__subtitle {
+    max-width: none;
+  }
   .deck-full .slide.is-active {
     width: 100%;
+  }
+  /* Presenting on a phone held upright, the largest 16:9 box that fits is a
+     390 × 219 letterbox: two thirds of the screen stay empty while the slide's
+     own table is cut off inside the strip. Portrait fills the screen instead
+     and lets a tall slide scroll. Rotate the phone and the 16:9 rule above
+     applies again, which is what a projector-shaped slide wants. */
+  @media (orientation: portrait) {
+    .deck-full .slide.is-active {
+      height: 100dvh;
+    }
+    .deck-full .slide__inner {
+      justify-content: center;
+      overflow-y: auto;
+      /* The floating bar sits 24 px from the bottom and is about 60 px tall;
+         without this the idea line ends up behind it. */
+      padding-bottom: 104px;
+    }
+    /* A visual that takes all the leftover height leaves a tall screen with a
+       title at the top, a table stranded in the middle and a sentence at the
+       foot. In portrait the three keep their natural heights and the group is
+       centred as one block. */
+    .deck-full .slide-visual {
+      flex: 0 1 auto;
+    }
+  }
+  /* «5 / 17» broke across two lines in the floating bar. */
+  .deck__count {
+    white-space: nowrap;
   }
 
   /* A slide table's natural width is its longest cell, and on a phone that is
@@ -1566,6 +1664,12 @@ kbd {
   }
   .slide-visual--table table.is-reveal td:first-child {
     font-family: var(--sans);
+  }
+  /* Fixed layout splits an exercise table down the middle, and half of 350 px
+     is one character short of «privat24.privatbank.ua». The question column
+     takes the room, since the answers beside it are covered until clicked. */
+  .slide-visual--table table.is-reveal th:first-child {
+    width: 62%;
   }
   /* Fixed layout is right until a table has too many columns to divide: the
      розряд expansion has nine, so each column gets ~40px and every cell breaks
@@ -1585,6 +1689,37 @@ kbd {
     overflow-wrap: normal;
     white-space: nowrap;
   }
+  /* Scrolled sideways, a table loses the column that says which row you are
+     reading — «нульовий — крайній правий» with no «3» beside it. The first
+     column stays put; the rest travels under it. */
+  .slide-visual--table table.is-wide th:first-child,
+  .slide-visual--table table.is-wide td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--tint);
+  }
+  /* A header is muted with opacity, which fades its new background too and
+     lets the scrolling row show through it. Same grey, applied to the text. */
+  .slide-visual--table table.is-wide th {
+    opacity: 1;
+    color: var(--muted-2);
+  }
+
+  /* A table cut off at the slide's edge looks like a table that ends there.
+     Classic CSS scroll shadows say otherwise: the tint-coloured covers travel
+     with the content (background-attachment: local) and uncover a shadow at
+     whichever edge still has rows behind it. */
+  .slide-visual--table:has(table.is-wide) {
+    background:
+      linear-gradient(to right, var(--tint) 40%, transparent) left / 28px 100% no-repeat,
+      linear-gradient(to left, var(--tint) 40%, transparent) right / 28px 100% no-repeat,
+      radial-gradient(farthest-side at 0 50%, rgba(16, 24, 40, 0.2), transparent)
+        left / 12px 100% no-repeat,
+      radial-gradient(farthest-side at 100% 50%, rgba(16, 24, 40, 0.2), transparent)
+        right / 12px 100% no-repeat;
+    background-attachment: local, local, scroll, scroll;
+  }
 
   /* Same story for prose tables in the supporting material: the glossary's
      term column is long enough to push the whole page sideways. */
@@ -1596,6 +1731,53 @@ kbd {
   .prose td {
     overflow-wrap: anywhere;
     padding: 9px 10px;
+  }
+  /* An address is one token, so «anywhere» breaks it mid-domain:
+     «privatban / k.ua». Two changes fit it whole: a step down in size, and a
+     wider first column — which only two-column tables can spare, hence the
+     column-counting :has(). */
+  .prose td code {
+    font-size: 0.9em;
+  }
+  .prose-table:not(:has(th:nth-child(3))) th:first-child {
+    width: 56%;
+  }
+  /* Three columns in 350 px is 116 px each, and the glossary came out two words
+     to a line with «централізова / ним» split between them. From three columns
+     up the table takes the width it needs and scrolls inside its frame, with
+     each column capped so a definition still wraps into a paragraph rather than
+     one long line. The term column stays put while the rest travels. */
+  .prose-table:has(th:nth-child(3)) table {
+    width: max-content;
+    min-width: 100%;
+    table-layout: auto;
+  }
+  .prose-table:has(th:nth-child(3)) th,
+  .prose-table:has(th:nth-child(3)) td {
+    overflow-wrap: break-word;
+    min-width: 92px;
+    max-width: 200px;
+  }
+  /* The first two columns are labels; the last one carries the meaning. Keeping
+     the labels narrow brings the start of that column on screen, so the row
+     shows what it is about before anyone swipes. */
+  .prose-table:has(th:nth-child(3)) th:first-child,
+  .prose-table:has(th:nth-child(3)) td:first-child {
+    max-width: 148px;
+  }
+  .prose-table:has(th:nth-child(3)) th:nth-child(2),
+  .prose-table:has(th:nth-child(3)) td:nth-child(2) {
+    max-width: 116px;
+  }
+  .prose-table:has(th:nth-child(3)) th:first-child,
+  .prose-table:has(th:nth-child(3)) td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--surface);
+  }
+  .prose-table:has(th:nth-child(3)) th:first-child {
+    background: var(--surface-muted);
   }
   .deck__bar {
     gap: 14px;
@@ -1613,6 +1795,83 @@ kbd {
 }
 
 @media (max-width: 560px) {
+  /* On a phone the slide sits exactly on the page's column: same gutter, so a
+     slide line starts where the title above it does. */
+  .slide__inner {
+    padding-inline: var(--gutter);
+  }
+
+  /* A phone is too narrow for a table of three or four columns to stay a
+     table: side-scrolling hides the column that carries the meaning, and every
+     row has to be swiped to be read. Below this width such a table becomes one
+     block per row — the first cell is the row's name, the rest are captioned
+     values, the captions being the header labels ProseTable hands to CSS.
+     Which tables those are is decided in ProseTable: a grid of numbers keeps
+     its table and scrolls, because a digit printed as a caption says nothing. */
+  .prose-table[data-stack] {
+    overflow-x: visible;
+  }
+  .prose-table[data-stack] table,
+  .prose-table[data-stack] tbody,
+  .prose-table[data-stack] tr,
+  .prose-table[data-stack] td {
+    display: block;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+  }
+  .prose-table[data-stack] thead {
+    display: none;
+  }
+  .prose-table[data-stack] tr {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .prose-table[data-stack] tr:last-child {
+    border-bottom: none;
+  }
+  .prose-table[data-stack] td {
+    position: static;
+    padding: 0;
+    border: none;
+  }
+  .prose-table[data-stack] td:first-child {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .prose-table[data-stack] td + td {
+    margin-top: 10px;
+  }
+  .prose-table[data-stack] td + td::before {
+    /* On its own line, not inline before the value: a long label wraps, and an
+       inline value then continues the label's last line — «СТОЇТЬ 3 нульовий»
+       reads as one phrase. */
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted-4);
+  }
+  .prose-table[data-stack] td:nth-child(2)::before {
+    content: var(--label-2, '');
+  }
+  .prose-table[data-stack] td:nth-child(3)::before {
+    content: var(--label-3, '');
+  }
+  .prose-table[data-stack] td:nth-child(4)::before {
+    content: var(--label-4, '');
+  }
+
+  /* Glyph, badge and span in one line leave the badge nearly touching the
+     span. The two labels stack against the right edge instead. */
+  .course-card__banner-end {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
   .site-header__inner {
     gap: 16px;
   }
